@@ -2,6 +2,12 @@
 
 A vintage inspired seventeen segment display and configuration scoller for Blazor. Supports serverside or wasm interaction.
 
+<details>
+  <summary>Click for animated screenshot</summary>
+  ![Screenshot](media/GVKSS.gif)
+</details>
+
+
 ## Table of Contents
 
 1. [Installation](#installation)
