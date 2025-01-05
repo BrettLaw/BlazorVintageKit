@@ -18,7 +18,7 @@ A vintage inspired seventeen segment display and configuration scoller for Blazo
 
 ## Installation
 
-Nuget package named BlazorVintageKit
+<code>dotnet add package BlazorVintageKit --version 1.0.1</code>
 
 ## Usage
 

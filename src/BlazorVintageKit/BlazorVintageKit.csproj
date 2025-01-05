@@ -1,31 +1,32 @@
-<Project Sdk="Microsoft.NET.Sdk.Razor">
+﻿<Project Sdk="Microsoft.NET.Sdk.Razor">
 
-  <PropertyGroup>
-    <TargetFramework>net8.0</TargetFramework>
-	<RazorLangVersion>7.0</RazorLangVersion>
-	<IsPackable>true</IsPackable>
-    <Nullable>enable</Nullable>
-    <ImplicitUsings>enable</ImplicitUsings>
-	<Version>1.0.0</Version>
-	<Authors>Brett Lawrence</Authors>
-	<Description>Vintage Blazor UI components</Description>
-	<PackageTags>Blazor component retro UI</PackageTags>
-	<RepositoryUrl>https://github.com/BrettLaw/BlazorVintageKit</RepositoryUrl>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<RazorLangVersion>7.0</RazorLangVersion>
+		<IsPackable>true</IsPackable>
+		<Nullable>enable</Nullable>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Version>1.0.1</Version>
+		<Authors>Brett Lawrence</Authors>
+		<Description>Vintage Blazor UI components</Description>
+		<PackageTags>Blazor component retro UI</PackageTags>
+		<RepositoryUrl>https://github.com/BrettLaw/BlazorVintageKit</RepositoryUrl>
+		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+	</PropertyGroup>
 
+	<ItemGroup>
+		<SupportedPlatform Include="browser" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <SupportedPlatform Include="browser" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.11" />
+		<PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.11" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="Microsoft.AspNetCore.Components.Web" Version="8.0.11" />
-    <PackageReference Include="Microsoft.AspNetCore.Components.WebAssembly" Version="8.0.11" />
-  </ItemGroup>
-
-<ItemGroup>
-	<RazorComponent Include="**\*.razor" />
-	<Content Update="wwwroot\css\your-component-styles.css" CopyToOutputDirectory="PreserveNewest" Pack="true" />
-</ItemGroup>
+	<ItemGroup>
+		<RazorComponent Include="**\*.razor" />
+		<Content Update="wwwroot\css\your-component-styles.css" CopyToOutputDirectory="PreserveNewest" Pack="true" />
+		<None Include="..\..\LICENSE.txt" Pack="true" PackagePath="" />
+	</ItemGroup>
 
 </Project>
