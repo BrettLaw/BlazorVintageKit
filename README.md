@@ -2,7 +2,7 @@
 
 A vintage inspired seventeen segment display and configuration scoller for Blazor. Supports serverside or wasm interaction.
 
-<a href="https://blazorvintagekit-gjefahhff5dng7dg.uksouth-01.azurewebsites.net/">Demo site here</a> (azure free tier, might be or stopped if quota is exceeded).
+<a href="https://blazorvintagekit-gjefahhff5dng7dg.uksouth-01.azurewebsites.net/">Demo site here</a> (azure free tier, might be slow or stopped if quota is exceeded).
 
 <details>
   <summary>Click for animated screenshot</summary>
