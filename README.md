@@ -2,6 +2,8 @@
 
 A vintage inspired seventeen segment display and configuration scoller for Blazor. Supports serverside or wasm interaction.
 
+<a href="">Demo site here</a> (azure free tier, might be slow).
+
 <details>
   <summary>Click for animated screenshot</summary>
   <p> <img src="media/BVKSS.gif" alt="Screenshot" /> </p>
