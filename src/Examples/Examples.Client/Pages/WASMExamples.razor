@@ -1,0 +1,80 @@
+﻿@page "/wasmexamples"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>WASM Examples</PageTitle>
+
+<h1>rendermode InteractiveWebAssembly</h1>
+
+<div style="display:flex;flex-direction:row;margin: 20px;">
+    <button class="btn btn-primary" style="height:fit-content;" @onclick="IncrementCharacter">Click me</button>
+    <div style="margin:10px;font-size: x-large;">@CurrentCharacter</div>
+    <BlazorVintageKit.Components.SeventeenSegmentDisplay Character="@CurrentCharacter" />
+</div>
+<hr />
+
+<div class="demo-panel">
+    <span>Default example - only Text specified.</span>
+    <BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="No customisation - default." />
+</div>
+<div style="margin:5px;"></div>
+<div class="demo-panel">
+    <span>Customisation via attribute.</span>
+    <div style="margin-top:10px;">
+        <BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="@DisplayText" ScrollDelayMS=@ScrollDelay CharacterCount=@CharacterCount LoopPadding="@LoopPadding" FixHeightPX="@FixHeightPX" />
+    </div>
+    <div class="form-group">
+        <label for="displayText" class="form-label">Update Display Text:</label>
+        <input @bind="DisplayText" @bind:event="oninput" class="form-control" id="displayText" style="min-width:50ch;" />
+
+        <label for="scrollDelay" class="form-label">Scroll Delay (ms):</label>
+        <input type="number" @bind="ScrollDelay" @bind:event="oninput" class="form-control" id="scrollDelay" step="25" style="min-width:6ch;" />
+
+        <label for="characterCount" class="form-label">Character Count:</label>
+        <input type="number" @bind="CharacterCount" @bind:event="oninput" class="form-control" id="characterCount" step="1" style="min-width:6ch;" />
+
+        <label for="loopPadding" class="form-label">Character Padding:</label>
+        <input type="number" @bind="LoopPadding" @bind:event="oninput" class="form-control" id="loopPadding" step="1" style="min-width:6ch;" />
+
+        <label for="heightFix" class="form-label">Height Fix Pixels:</label>
+        <input type="number" @bind="FixHeightPX" @bind:event="oninput" class="form-control" id="heightFix" step="5" style="min-width:6ch;" />
+    </div>
+</div>
+
+
+
+
+<div class="demo-panel xseg">
+    <span>CSS override - change colour, increase spacing, remove LED fade.</span>
+    <style>
+        .xseg .seg.on {
+            fill: hotpink;
+        }
+
+        .xseg .seg {
+            transition: none; /* Adjust duration as needed */
+        }
+
+        .xseg .seventeen-seg-display {
+            margin-right: 8px;
+        }
+    </style>
+    <BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="\\ CSS overrides example //" />
+</div>
+
+
+@code {
+    private string DisplayText = "Blazor Vintage Kit Rocks!";
+    private int ScrollDelay = 250;
+    private int CharacterCount = 30;
+    private int LoopPadding = 3;
+    private int FixHeightPX = 50;
+
+    private int currentCount = 0;
+    private char[] characters = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ.-_'\\/[]{}()!&*+".ToCharArray();
+    private char CurrentCharacter => characters[currentCount % characters.Length];
+
+    private void IncrementCharacter()
+    {
+        currentCount++;
+    }
+}

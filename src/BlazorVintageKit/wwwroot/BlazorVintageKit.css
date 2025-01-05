@@ -1,0 +1,26 @@
+﻿svg {
+    max-width: 100%;
+}
+
+.seg {
+    transition: fill 0.3s ease; /* Adjust duration as needed */
+}
+
+.seg.on {
+    fill: #08FF08; /* Color for 'on' state */
+}
+
+
+.seg.off {
+    fill: #1d1d1d; /* Color for 'off' state */
+}
+
+.seventeen-seg-display {
+    margin-right: 4px;
+}
+
+.scrolling-seg-display {
+    display: flex;
+    background: black;
+    align-items: center;
+}

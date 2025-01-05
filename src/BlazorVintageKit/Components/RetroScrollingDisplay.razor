@@ -1,0 +1,49 @@
+﻿<div class="scrolling-seg-display" style="@((FixHeightPX != null) ? $"height:{FixHeightPX}px;" : "")">
+    @foreach (var character in visibleCharacters)
+    {
+        <SeventeenSegmentDisplay Character="character" />
+    }
+</div>
+
+@code {
+    [Parameter] public string DisplayText { get; set; } = string.Empty;
+    [Parameter] public int LoopPadding { get; set; } = 3;
+    [Parameter] public int CharacterCount { get; set; } = 30;
+    [Parameter] public int ScrollDelayMS { get; set; } = 250;
+    [Parameter] public int? FixHeightPX { get; set; } = null;
+
+    private List<char> visibleCharacters = new();
+    private string fullText = string.Empty;
+
+    protected override void OnInitialized()
+    {
+        UpdateFullText();
+        _ = ScrollTextAsync();
+    }
+
+    protected override void OnParametersSet()
+    {
+        UpdateFullText();
+    }
+
+    private void UpdateFullText()
+    {
+        int actualPadding = Math.Max(CharacterCount - DisplayText.Length, LoopPadding);
+
+        fullText = DisplayText.ToUpperInvariant().PadLeft(DisplayText.Length + actualPadding);
+        visibleCharacters = fullText.Take(CharacterCount).ToList();
+        StateHasChanged();
+    }
+
+    private async Task ScrollTextAsync()
+    {
+        while (true)
+        {
+            await Task.Delay(ScrollDelayMS);
+            var firstChar = fullText.First();
+            fullText = fullText.Substring(1) + firstChar;
+            visibleCharacters = fullText.Take(CharacterCount).ToList();
+            await InvokeAsync(StateHasChanged);
+        }
+    }
+}

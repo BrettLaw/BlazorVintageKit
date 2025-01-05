@@ -1,0 +1,110 @@
+﻿<div class="seventeen-seg-display">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+         x="0px" y="0px" width="69px" height="99px"
+         viewBox="0 0 69 99"
+         enable-background="new 0 0 69 99"
+         xml:space="preserve">
+
+    <g>
+    <rect width="70" height="100" />
+    </g>
+        @* shapes inspired by https://codepen.io/atelierbram/pen/DpKZgX *@
+    <g>
+    <g>
+    <polygon class="seg @(charOff.a ? "on" : "off")" points="29,44 25,44 10,19 10,10 13.903,10 29,35.104" />
+    <polygon class="seg @(charOff.b ? "on" : "off")" points="10,89 14,89 29,64 29,55 25.097,55 10,80.104" />
+    <polygon class="seg @(charOff.c ? "on" : "off")" points="59,89 55,89 40,64 40,55 43.903,55 59,80.104" />
+    <polygon class="seg @(charOff.d ? "on" : "off")" points="40,44 44,44 59,19 59,10 55.097,10 40,35.104" />
+    <polygon class="seg @(charOff.e ? "on" : "off")" points="3,4 0,7 0,45.5 3,48.5 9,42.5 9,10" />
+    <polygon class="seg @(charOff.f ? "on" : "off")" points="3,50.5 0,53.5 0,92 3,95 9,89 9,56.5" />
+    <polygon class="seg @(charOff.g ? "on" : "off")" points="34.5,50.5 30,55 30,90.5 34.5,95 39,90.5 39,55" />
+    <polygon class="seg @(charOff.h ? "on" : "off")" points="34.5,4 30,8.5 30,44 34.5,48.5 39,44 39,8.5" />
+    <polygon class="seg @(charOff.i ? "on" : "off")" points="66,4 60,10 60,42.5 66,48.5 69,45.5 69,7" />
+    <polygon class="seg @(charOff.j ? "on" : "off")" points="66,50.5 60,56.5 60,89 66,95 69,92 69,53.5" />
+    <polygon class="seg @(charOff.k ? "on" : "off")" points="30.5,0 7,0 4,3 10,9 27.5,9 33.5,3" />
+    <polygon class="seg @(charOff.l ? "on" : "off")" points="60.5,45 40,45 35.5,49.5 40,54 60.5,54 65,49.5" />
+    <polygon class="seg @(charOff.m ? "on" : "off")" points="29,45 8.5,45 4,49.5 8.5,54 29,54 33.5,49.5" />
+    <polygon class="seg @(charOff.n ? "on" : "off")" points="62,0 38.5,0 35.5,3 41.5,9 59,9 65,3" />
+    <polygon class="seg @(charOff.o ? "on" : "off")" points="27.5,90 10,90 4,96 7,99 30.5,99 33.5,96" />
+    <polygon class="seg @(charOff.p ? "on" : "off")" points="59,90 41.5,90 35.5,96 38.5,99 62,99 65,96" />
+    <polygon class="seg @(charOff.dot ? "on" : "off")" points="30,89 39,89 39,98 30,98" />
+        </g>
+    </g>
+    </svg>
+</div>
+
+
+@code {
+    [Parameter] public char Character { get; set; }
+
+    private (bool a, bool b, bool c, bool d, bool e, bool f, bool g, bool h, bool i, bool j, bool k, bool l, bool m, bool n, bool o, bool p, bool dot) charOff;
+    const bool T = true;
+    const bool F = false;
+
+    protected override void OnParametersSet()
+    {
+        charOff = Character switch
+        {
+            //      1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16
+            '0' => (F, T, F, T, T, T, F, F, T, T, T, F, F, T, T, T, F),
+            '1' => (F, F, F, F, F, F, T, T, F, F, F, F, F, F, F, F, F),
+            '2' => (F, F, F, F, F, T, F, F, T, F, T, T, T, T, T, T, F),
+            '3' => (F, F, F, F, F, F, F, F, T, T, T, T, F, T, T, T, F),
+            '4' => (F, F, F, F, T, F, F, F, T, T, F, T, T, F, F, F, F),
+            '5' => (F, F, F, F, T, F, F, F, F, T, T, T, T, T, T, T, F),
+            '6' => (F, F, F, F, T, T, F, F, F, T, T, T, T, T, T, T, F),
+            '7' => (F, F, F, F, F, F, F, F, T, T, T, F, F, T, F, F, F),
+            '8' => (F, F, F, F, T, T, F, F, T, T, T, T, T, T, T, T, F),
+            '9' => (F, F, F, F, T, F, F, F, T, T, T, T, T, T, T, T, F),
+            ' ' => (F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F),
+            //      1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16
+            '-' => (F, F, F, F, F, F, F, F, F, F, F, T, T, F, F, F, F),
+            'A' => (F, F, F, F, T, T, F, F, T, T, T, T, T, T, F, F, F),
+            'B' => (F, F, F, F, F, F, T, T, T, T, T, T, F, T, T, T, F),
+            'C' => (F, F, F, F, T, T, F, F, F, F, T, F, F, T, T, T, F),
+            'D' => (F, F, F, F, F, F, T, T, T, T, T, F, F, T, T, T, F),
+            'E' => (F, F, F, F, T, T, F, F, F, F, T, F, T, T, T, T, F),
+            'F' => (F, F, F, F, T, T, F, F, F, F, T, F, T, T, F, F, F),
+            'G' => (F, F, F, F, T, T, F, F, F, T, T, T, F, T, T, T, F),
+            //      1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16
+            'H' => (F, F, F, F, T, T, F, F, T, T, F, T, T, F, F, F, F),
+            'I' => (F, F, F, F, F, F, T, T, F, F, T, F, F, T, T, T, F),
+            'J' => (F, F, F, F, F, T, F, F, T, T, F, F, F, F, T, T, F),
+            'K' => (F, F, F, T, T, T, F, F, F, T, F, T, T, F, F, F, F),
+            'L' => (F, F, F, F, T, T, F, F, F, F, F, F, F, F, T, T, F),
+            'M' => (T, F, F, T, T, T, F, F, T, T, F, F, F, F, F, F, F),
+            'N' => (T, F, T, F, T, T, F, F, T, T, F, F, F, F, F, F, F),
+            'O' => (F, F, F, F, T, T, F, F, T, T, T, F, F, T, T, T, F),
+            'P' => (F, F, F, F, T, T, F, F, T, F, T, T, T, T, F, F, F),
+            'Q' => (F, F, T, F, T, T, F, F, T, T, T, F, F, T, T, T, F),
+            'R' => (F, F, T, F, T, T, F, F, T, F, T, T, T, T, F, F, F),
+            //      1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16
+            'S' => (T, F, F, F, F, F, F, F, F, T, T, T, F, T, T, T, F),
+            'T' => (F, F, F, F, F, F, T, T, F, F, T, F, F, T, F, F, F),
+            'U' => (F, F, F, F, T, T, F, F, T, T, F, F, F, F, T, T, F),
+            'V' => (F, T, F, T, T, T, F, F, F, F, F, F, F, F, F, F, F),
+            'W' => (F, T, T, F, T, T, F, F, T, T, F, F, F, F, F, F, F),
+            'X' => (T, T, T, T, F, F, F, F, F, F, F, F, F, F, F, F, F),
+            'Y' => (F, F, F, F, T, F, T, F, T, F, F, T, T, F, F, F, F),
+            'Z' => (F, T, F, T, F, F, F, F, F, F, T, F, F, T, T, T, F),
+            '.' => (F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, T),
+            '_' => (F, F, F, F, F, F, F, F, F, F, F, F, F, F, T, T, F),
+            '\'' => (T, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F),
+            //      1  2  3  4  5  6  7  8  9  10 11 12 13 14 15 16
+            '[' or '{'
+                => (F, F, F, F, T, T, F, F, F, F, T, F, F, F, T, F, F),
+            ']' or '}'
+                => (F, F, F, F, F, F, F, F, T, T, F, F, F, T, F, T, F),
+            '!' => (F, F, F, F, F, F, F, T, F, F, F, F, F, F, F, F, T),
+            '&' => (F, F, F, F, T, T, T, T, T, T, T, F, T, F, T, T, T),
+            '*' => (T, T, T, T, F, F, T, T, F, F, F, T, T, F, F, F, F),
+            '+' => (F, F, F, F, F, F, T, T, F, F, F, T, T, F, F, F, F),
+            '(' => (F, F, T, T, F, F, F, F, F, F, F, F, F, F, F, F, F),
+            ')' => (T, T, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F),
+            '\\'=> (T, F, T, F, F, F, F, F, F, F, F, F, F, F, F, F, F),
+            '/' => (F, T, F, T, F, F, F, F, F, F, F, F, F, F, F, F, F),
+            _ => (F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F, F)
+        };
+    }
+
+}
