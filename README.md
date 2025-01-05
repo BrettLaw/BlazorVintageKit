@@ -4,7 +4,7 @@ A vintage inspired seventeen segment display and configuration scoller for Blazo
 
 <details>
   <summary>Click for animated screenshot</summary>
-  ![Screenshot](media/GVKSS.gif)
+  <p> <img src="media/GVKSS.gif" alt="Screenshot" /> </p>
 </details>
 
 
