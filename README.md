@@ -29,7 +29,7 @@ After installation include css from the package:
 <code> &lt;link rel="stylesheet" href="_content/BlazorVintageKit/BlazorVintageKit.css" /> </code>
 
 ## Usage
-**See the examples in this repo.**
+[See the examples in this repo.](https://github.com/BrettLaw/BlazorVintageKit/tree/dev/src/Examples/Examples.Client/Pages)
 
 This package provides:
 
