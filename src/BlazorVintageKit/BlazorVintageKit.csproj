@@ -25,6 +25,9 @@
 
 	<ItemGroup>
 		<RazorComponent Include="**\*.razor" />
+		<Content Update="Components\LEDStack.razor">
+		  <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
+		</Content>
 		<Content Update="wwwroot\css\your-component-styles.css" CopyToOutputDirectory="PreserveNewest" Pack="true" />
 		<None Include="..\..\LICENSE.txt" Pack="true" PackagePath="" />
 	</ItemGroup>

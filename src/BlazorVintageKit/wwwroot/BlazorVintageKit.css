@@ -2,25 +2,41 @@
     max-width: 100%;
 }
 
+/*Seventeen segment display*/
 .seg {
     transition: fill 0.3s ease; /* Adjust duration as needed */
 }
-
 .seg.on {
     fill: #08FF08; /* Color for 'on' state */
 }
-
-
 .seg.off {
     fill: #1d1d1d; /* Color for 'off' state */
 }
-
 .seventeen-seg-display {
     margin-right: 4px;
 }
-
 .scrolling-seg-display {
     display: flex;
     background: black;
     align-items: center;
+}
+
+/*LED stack display*/
+.ledstack-display {
+    
+}
+.stack {
+    transition: fill 0.5s ease; /* Adjust duration as needed */
+}
+.stack.on {
+    fill: #08FF08; /* Color for 'on' state */
+}
+.stack.off {
+    fill: #1d1d1d; /* Color for 'off' state */
+}
+.stack.onmed {
+    fill: yellow; /* Color for 'medium' state */
+}
+.stack.onhigh {
+    fill: red; /* Color for 'high' state */
 }

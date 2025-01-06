@@ -1,0 +1,87 @@
+﻿@page "/ledtransition"
+@rendermode InteractiveServer
+
+<div class="ledstack-seg-display">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+         x="0px" y="0px" width="80px" height="10px"
+         viewBox="0 0 80 10" enable-background="new 0 0 80 10" xml:space="preserve">
+    <defs>
+            <!-- Horizontal Gradient -->
+    <linearGradient id="horizontalGradient" x1="0%" y1="0%" x2="100%" y2="0%">
+    <stop offset="0%" style="stop-color:#1c352d; stop-opacity:1" />
+    <stop offset="10%" style="stop-color:green; stop-opacity:1" />
+    <stop offset="50%" style="stop-color:#adff2f ; stop-opacity:1" />
+    <stop offset="90%" style="stop-color:green; stop-opacity:1" />
+    <stop offset="100%" style="stop-color:#1c352d; stop-opacity:1" />
+            </linearGradient>
+            <!-- Vertical Gradient -->
+    <linearGradient id="verticalGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+    <stop offset="0%" style="stop-color:#1c352d; stop-opacity:1" />
+    <stop offset="25%" style="stop-color:green; stop-opacity:1" />
+    <stop offset="50%" style="stop-color:#adff2f ; stop-opacity:1" />
+    <stop offset="75%" style="stop-color:green; stop-opacity:1" />
+    <stop offset="100%" style="stop-color:#1c352d; stop-opacity:1" />
+            </linearGradient>
+        </defs>
+
+        <!-- Rectangle with horizontal gradient -->
+    <rect width="80" height="10" fill="url(#horizontalGradient)" />
+        <!-- Rectangle with vertical gradient -->
+    <rect width="80" height="10" fill="url(#verticalGradient)" opacity="0.5" />
+
+
+    <rect id="grayOverlay" class="@(isLedOn ? "hidden" : "visible")" width="80" height="10" fill="gray" />
+    </svg>
+</div>
+
+<div>
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+         x="0px" y="0px" width="80px" height="10px"
+         viewBox="0 0 80 10" enable-background="new 0 0 80 10" xml:space="preserve">
+
+
+    <defs>
+        <radialGradient id="ledGradient" cx="50%" cy="50%" r="80%" fx="50%" fy="50%" gradientUnits="userSpaceOnUse">
+            <stop offset="0%" style="stop-color:lime; stop-opacity:1" />
+            <stop offset="80%" style="stop-color:green; stop-opacity:1" />
+            <stop offset="90%" style="stop-color:#013220; stop-opacity:1" />
+            <stop offset="95%" style="stop-color:black; stop-opacity:1" />
+        </radialGradient>
+    </defs>
+
+        <!-- Fixed rectangle with gradient -->
+    <rect width="80" height="10" fill="url(#ledGradient)" />
+        <!-- Transitioning gray rectangle -->
+    <rect id="grayOverlay" class="@(isLedOn ? "hidden" : "visible")" width="80" height="10" fill="gray" />
+    
+
+</svg>
+</div>
+
+
+
+
+
+
+<button @onclick="ToggleLedState">Toggle LED</button>
+
+<style>
+    .visible {
+        opacity: 1;
+        transition: opacity 0.2s ease-out;
+    }
+
+    .hidden {
+        opacity: 0;
+        transition: opacity 0.2s ease-out;
+    }
+</style>
+
+@code {
+    private bool isLedOn = false;
+
+    private void ToggleLedState()
+    {
+        isLedOn = !isLedOn;
+    }
+}
