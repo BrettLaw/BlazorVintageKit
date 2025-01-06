@@ -1,0 +1,136 @@
+﻿@page "/wasmledstack"
+@rendermode InteractiveWebAssembly
+
+<PageTitle>WASM Examples</PageTitle>
+
+<h3>rendermode InteractiveWebAssembly</h3>
+
+
+<div style="display:flex;flex-direction:row;margin: 20px;">
+
+    <BlazorVintageKit.Components.LEDStack BarValue=@barValue
+                                          BarCount=@barCount
+                                          BarWidth=@barWidth
+                                          BarGap=@barGap
+                                          BarThickness=@barThickness
+                                          LowLimit=@(lowDefined ? lowLimit : null)
+                                          MedLimit=@(medDefined ? medLimit : null) />
+
+</div>
+<hr />
+
+
+<div>
+    <button disabled="@(isAnimating || barValue >= barCount ? true : null)" class="btn btn-primary" style="height:fit-content;" @onclick="Up">Up</button>
+    <button disabled="@(isAnimating || barValue <= 0 ? true : null)" class="btn btn-primary" style="height:fit-content;" @onclick="Down">Down</button>
+    <div>
+        <p>@barValue</p>
+    </div>
+
+    <label> <input type="checkbox" @onchange="OnAnimateChanged" /> Animate </label>
+
+    <div class="demo-panel">
+        <div class="form-group">
+            <div style="margin-left:10px;">
+                <label for="barCount" class="form-label">Bar Count:</label>
+                <input type="number" @bind="barCount" @bind:event="oninput" class="form-control" id="barCount" step="1" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="barWidth" class="form-label">Bar Width:</label>
+                <input type="number" @bind="barWidth" @bind:event="oninput" class="form-control" id="barWidth" step="5" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="barGap" class="form-label">Bar Gap:</label>
+                <input type="number" @bind="barGap" @bind:event="oninput" class="form-control" id="barGap" step="1" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="barThickness" class="form-label">Bar Thickness:</label>
+                <input type="number" @bind="barThickness" @bind:event="oninput" class="form-control" id="barThickness" step="1" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="lowLimit" class="form-label">LowLimit:</label>
+                <input type="number" @bind="lowLimit" @bind:event="oninput" class="form-control" id="lowLimit" step="1" style="min-width:6ch;max-width:8ch;" />
+                <label>
+                    <input type="checkbox" @bind="lowDefined" /> Low is defined: @lowDefined
+                </label>
+            </div>
+            <div style="margin-left:10px;">
+                <label for="medLimit" class="form-label">MedLimit:</label>
+                <input type="number" @bind="medLimit" @bind:event="oninput" class="form-control" id="medLimit" step="1" style="min-width:6ch;max-width:8ch;" />
+                <label>
+                    <input type="checkbox" @bind="medDefined" /> Med is defined: @medDefined
+                </label>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+@code {
+    private int barValue = 3;
+    private int barCount = 11;
+    private int barWidth = 50;
+    private int barGap = 1;
+    private int barThickness = 10;
+    private int? lowLimit = 6;
+    private bool lowDefined = false;
+    private int? medLimit = 9;
+    private bool medDefined = false;
+
+
+    private bool isAnimating;
+    private void OnAnimateChanged(ChangeEventArgs e)
+    {
+        isAnimating = (bool)e.Value!;
+        if (isAnimating)
+        { StartAnimation(); }
+    }
+    private async void StartAnimation()
+    {
+        while (isAnimating)
+        {
+            PerformAnimationStep();
+            await Task.Delay(100);
+        }
+    }
+
+    private int targetValue = 0;
+    private Random random = new Random();
+
+    private void PerformAnimationStep()
+    {
+        if (barValue == targetValue)
+        {
+            targetValue = random.Next(0, barCount);
+        }
+
+        if (barValue > targetValue)
+        {
+            barValue--;
+        }
+        else if (barValue < targetValue)
+        {
+            barValue++;
+
+            // sometimes increase by more than 1, just for fun.
+            if (barValue < targetValue && random.Next(0, 2) > 0)
+            {
+                barValue = Math.Min(barValue + random.Next(1, targetValue - barValue + 1), targetValue);
+            }
+        }
+
+        StateHasChanged();
+    }
+
+
+    private void Up()
+    {
+        barValue++;
+    }
+
+    private void Down()
+    {
+        barValue--;
+    }
+
+}

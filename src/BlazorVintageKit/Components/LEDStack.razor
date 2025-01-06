@@ -1,0 +1,95 @@
+﻿
+<div class="ledstack-seg-display">
+    <svg version="1.1" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+    x="0px" y="0px" width="@($"{BarWidth + 2}px")" height="@($"{totalHeight + 2}px")"
+    viewBox="0 0 @($"{BarWidth + 2}") @($"{totalHeight + 2}")"
+    enable-background="new 0 0 @($"{BarWidth + 2}") @($"{totalHeight + 2}")"
+    xml:space="preserve">
+
+        <g>
+            <rect width="@($"{BarWidth + 2}")" height="@($"{totalHeight + 2}")" />
+        </g>
+
+        <g>
+            @{
+
+                for (int i = 0; i < BarCount; i++)
+                {
+                    int y1 = 1 + i * (BarThickness + BarGap);
+                    // Adding 1-pixel gap at the top 
+                    int y2 = y1 + BarThickness;
+                    int barIndex = BarCount - i;
+
+                    string className = "off";
+                    if (barIndex <= BarValue)
+                    {
+                        if (MedLimit != null && barIndex > MedLimit)
+                        {
+                            className = "onhigh";
+                        }
+                        else if (LowLimit != null && barIndex > LowLimit)
+                        {
+                            className = "onmed";
+                        }
+                        else
+                        {
+                            className = "on";
+                        }
+                    }
+                    // Adding 1-pixel gap at the left and right 
+                    int x1 = 1;
+                    int width = BarWidth;
+                    int height = BarThickness;
+                    <rect class="stack @className" x="@x1" y="@y1" width="@width" height="@height" />
+                }
+
+            }
+        </g>
+    </svg>
+</div>
+
+
+<style>
+    .visible {
+        opacity: 1;
+        transition: opacity 0.2s ease-out;
+    }
+
+    .hidden {
+        opacity: 0;
+        transition: opacity 0.2s ease-out;
+    }
+</style>
+
+@code {
+    /// <summary> 
+    /// The value to display in the LED stack
+    /// </summary>
+    [Parameter] public int BarValue { get; set; } = 0;
+
+    /// <summary>
+    /// The number of elements in the LED stack.
+    /// <remarks> 
+    /// Default value is 11. 
+    /// </remarks>
+    /// </summary>
+    [Parameter] public int BarCount { get; set; } = 11;
+    [Parameter] public int BarWidth { get; set; } = 50;
+    [Parameter] public int BarGap { get; set; } = 1;
+    [Parameter] public int BarThickness { get; set; } = 10;
+    [Parameter] public int? LowLimit { get; set; } = null;
+    [Parameter] public int? MedLimit { get; set; } = null;
+
+    private int totalHeight = 0;
+
+    protected override void OnParametersSet()
+    {
+        totalHeight = CalcTotalHeight();
+    }
+
+    private int CalcTotalHeight()
+    {
+        return (BarThickness + BarGap) * BarCount - BarGap;
+    }
+        
+}

@@ -9,16 +9,17 @@
 }
 .form-group {
     display: flex;
-    flex-wrap:wrap;
+    flex-wrap: wrap;
     align-items: center;
     margin-bottom: 10px;
     margin-top: 10px;
 }
 
 .form-label {
-    width: 150px; /* Adjust as needed */
+    /* width: 150px;  Adjust as needed */
     margin-right: 10px;
     margin-left: 10px;
+    margin-bottom: 1px;
     font-weight: bold;
 }
 
