@@ -6,11 +6,11 @@ A vintage inspired seventeen segment display and configuration scoller for Blazo
 
 <details>
   <summary>Click for seventeen segment animated screenshot</summary>
-  <p> <img src="media/BVKSS.gif" alt="Screenshot" /> </p>
+  <p> <img src="media/BVKSS.gif" alt="Seventeen Segment Scroller animation" /> </p>
 </details>
 <details>
   <summary>Click for LED stack animated screenshot</summary>
-  <p> <img src="media/BVKLS.gif" alt="Screenshot" /> </p>
+  <p> <img src="media/BVKLS.gif" alt="LED Stack animation" /> </p>
 </details>
 
 ## Table of Contents
@@ -34,9 +34,12 @@ After installation include css from the package:
 This package provides:
 
 A seventeen segment display:
+<img src="media/SeventeenSegment.png" alt="Seventeen Segment Display" />
 <code><BlazorVintageKit.Components.SeventeenSegmentDisplay Character="@CurrentCharacter" /></code>
 
+
 A scroller composed of seventeed segment displays:
+<img src="media/Scroller.png" alt="Seventeen Segment Scroller" />
 <code><BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="Text to scroll." /></code>
 customisable like this:
 <code>
@@ -44,6 +47,7 @@ customisable like this:
 </code>
 
 An LED stack:
+<img src="media/LEDStack.png" alt="LED Stack" />
 <code>    <BlazorVintageKit.Components.LEDStack BarValue=@barValue
                                           BarCount=11
                                           LowLimit=4
