@@ -5,10 +5,13 @@ A vintage inspired seventeen segment display and configuration scoller for Blazo
 <a href="https://blazorvintagekit-gjefahhff5dng7dg.uksouth-01.azurewebsites.net/">Demo site here</a> (azure free tier, might be slow or stopped if quota is exceeded).
 
 <details>
-  <summary>Click for animated screenshot</summary>
+  <summary>Click for seventeen segment animated screenshot</summary>
   <p> <img src="media/BVKSS.gif" alt="Screenshot" /> </p>
 </details>
-
+<details>
+  <summary>Click for LED stack animated screenshot</summary>
+  <p> <img src="media/BVKLS.gif" alt="Screenshot" /> </p>
+</details>
 
 ## Table of Contents
 
@@ -20,24 +23,31 @@ A vintage inspired seventeen segment display and configuration scoller for Blazo
 
 ## Installation
 
-<code>dotnet add package BlazorVintageKit --version 1.0.1</code>
+<code>dotnet add package BlazorVintageKit</code>
+
+After installation include css from the package:
+<code> &lt;link rel="stylesheet" href="_content/BlazorVintageKit/BlazorVintageKit.css" /> </code>
 
 ## Usage
-
 **See the examples in this repo.**
 
-A single segment display can be used like this:
-<code><BlazorVintageKit.Components.SeventeenSegmentDisplay Character="@CurrentCharacter" />
-</code>
+This package provides:
 
-The scroller can be used like this:
-<code><BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="No customisation - default." />
-</code>
+A seventeen segment display:
+<code><BlazorVintageKit.Components.SeventeenSegmentDisplay Character="@CurrentCharacter" /></code>
 
-or customised like this:
+A scroller composed of seventeed segment displays:
+<code><BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="Text to scroll." /></code>
+customisable like this:
 <code>
 <BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="@DisplayText" ScrollDelayMS=@ScrollDelay CharacterCount=@CharacterCount LoopPadding="@LoopPadding" FixHeightPX="@FixHeightPX" />
 </code>
+
+An LED stack:
+<code>    <BlazorVintageKit.Components.LEDStack BarValue=@barValue
+                                          BarCount=11
+                                          LowLimit=4
+                                          MedLimit=7 /></code>
 
 ## Contributing
 ?
