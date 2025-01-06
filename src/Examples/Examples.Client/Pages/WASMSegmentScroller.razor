@@ -1,4 +1,4 @@
-﻿@page "/wasmexamples"
+﻿@page "/wasmsegmentscroller"
 @rendermode InteractiveWebAssembly
 
 <PageTitle>WASM Examples</PageTitle>
@@ -16,27 +16,33 @@
     <span>Default example - only Text specified.</span>
     <BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="No customisation - default." />
 </div>
-<div style="margin:5px;"></div>
+<div style="margin:10px;"></div>
 <div class="demo-panel">
     <span>Customisation via attribute.</span>
-    <div style="margin-top:10px;">
+    <div style="margin:10px;">
         <BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="@DisplayText" ScrollDelayMS=@ScrollDelay CharacterCount=@CharacterCount LoopPadding="@LoopPadding" FixHeightPX="@FixHeightPX" />
     </div>
     <div class="form-group">
-        <label for="displayText" class="form-label">Update Display Text:</label>
+        <div style="margin-left:10px;">
+        <label for="displayText" class="form-label">Display Text:</label>
         <input @bind="DisplayText" @bind:event="oninput" class="form-control" id="displayText" style="min-width:50ch;" />
-
+        </div>
+        <div style="margin-left:10px;">
         <label for="scrollDelay" class="form-label">Scroll Delay (ms):</label>
         <input type="number" @bind="ScrollDelay" @bind:event="oninput" class="form-control" id="scrollDelay" step="25" style="min-width:6ch;" />
-
+        </div>
+        <div style="margin-left:10px;">
         <label for="characterCount" class="form-label">Character Count:</label>
         <input type="number" @bind="CharacterCount" @bind:event="oninput" class="form-control" id="characterCount" step="1" style="min-width:6ch;" />
-
+        </div>
+        <div style="margin-left:10px;">
         <label for="loopPadding" class="form-label">Character Padding:</label>
         <input type="number" @bind="LoopPadding" @bind:event="oninput" class="form-control" id="loopPadding" step="1" style="min-width:6ch;" />
-
+        </div>
+        <div style="margin-left:10px;">
         <label for="heightFix" class="form-label">Height Fix Pixels:</label>
         <input type="number" @bind="FixHeightPX" @bind:event="oninput" class="form-control" id="heightFix" step="5" style="min-width:6ch;" />
+        </div>
     </div>
 </div>
 

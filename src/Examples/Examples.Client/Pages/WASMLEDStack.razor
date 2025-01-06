@@ -4,6 +4,8 @@
 <PageTitle>WASM Examples</PageTitle>
 
 <h3>rendermode InteractiveWebAssembly</h3>
+
+
 <div style="display:flex;flex-direction:row;margin: 20px;">
 
     <BlazorVintageKit.Components.LEDStack BarValue=@barValue
@@ -29,44 +31,51 @@
 
     <div class="demo-panel">
         <div class="form-group">
-            <label for="barCount" class="form-label">Bar Count:</label>
-            <input type="number" @bind="barCount" @bind:event="oninput" class="form-control" id="barCount" step="1" style="min-width:6ch;" />
-
-            <label for="barWidth" class="form-label">Bar Width:</label>
-            <input type="number" @bind="barWidth" @bind:event="oninput" class="form-control" id="barWidth" step="5" style="min-width:6ch;" />
-
-            <label for="barGap" class="form-label">Bar Gap:</label>
-            <input type="number" @bind="barGap" @bind:event="oninput" class="form-control" id="barGap" step="1" style="min-width:6ch;" />
-
-            <label for="barThickness" class="form-label">Bar Thickness:</label>
-            <input type="number" @bind="barThickness" @bind:event="oninput" class="form-control" id="barThickness" step="1" style="min-width:6ch;" />
-
-            <label for="lowLimit" class="form-label">LowLimit:</label>
-            <input type="number" @bind="lowLimit" @bind:event="oninput" class="form-control" id="lowLimit" step="1" style="min-width:6ch;max-width:8ch;" />
-            <label>
-                <input type="checkbox" @bind="lowDefined" /> Low is defined: @lowDefined
-            </label>
-
-            <label for="medLimit" class="form-label">MedLimit:</label>
-            <input type="number" @bind="medLimit" @bind:event="oninput" class="form-control" id="medLimit" step="1" style="min-width:6ch;max-width:8ch;" />
-            <label>
-                <input type="checkbox" @bind="medDefined" /> Med is defined: @medDefined
-            </label>
+            <div style="margin-left:10px;">
+                <label for="barCount" class="form-label">Bar Count:</label>
+                <input type="number" @bind="barCount" @bind:event="oninput" class="form-control" id="barCount" step="1" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="barWidth" class="form-label">Bar Width:</label>
+                <input type="number" @bind="barWidth" @bind:event="oninput" class="form-control" id="barWidth" step="5" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="barGap" class="form-label">Bar Gap:</label>
+                <input type="number" @bind="barGap" @bind:event="oninput" class="form-control" id="barGap" step="1" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="barThickness" class="form-label">Bar Thickness:</label>
+                <input type="number" @bind="barThickness" @bind:event="oninput" class="form-control" id="barThickness" step="1" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="lowLimit" class="form-label">LowLimit:</label>
+                <input type="number" @bind="lowLimit" @bind:event="oninput" class="form-control" id="lowLimit" step="1" style="min-width:6ch;max-width:8ch;" />
+                <label>
+                    <input type="checkbox" @bind="lowDefined" /> Low is defined: @lowDefined
+                </label>
+            </div>
+            <div style="margin-left:10px;">
+                <label for="medLimit" class="form-label">MedLimit:</label>
+                <input type="number" @bind="medLimit" @bind:event="oninput" class="form-control" id="medLimit" step="1" style="min-width:6ch;max-width:8ch;" />
+                <label>
+                    <input type="checkbox" @bind="medDefined" /> Med is defined: @medDefined
+                </label>
+            </div>
         </div>
     </div>
 </div>
 
 
 @code {
-    private int barValue = 0;
+    private int barValue = 3;
     private int barCount = 11;
     private int barWidth = 50;
     private int barGap = 1;
     private int barThickness = 10;
     private int? lowLimit = 6;
-    private bool lowDefined = true;
+    private bool lowDefined = false;
     private int? medLimit = 9;
-    private bool medDefined = true;
+    private bool medDefined = false;
 
 
     private bool isAnimating;
