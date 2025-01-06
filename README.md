@@ -34,21 +34,16 @@ After installation include css from the package:
 This package provides:
 
 * A seventeen segment display:<br>
-	<img src="media/SeventeenSegment.png" alt="Seventeen Segment Display" />
+	<img src="media/SeventeenSegment.png" alt="Seventeen Segment Display" /><br>
 	<code><BlazorVintageKit.Components.SeventeenSegmentDisplay Character="@CurrentCharacter" /></code>
 * A scroller composed of seventeed segment displays:
 	<img src="media/Scroller.png" alt="Seventeen Segment Scroller" /><br>
-	<code><BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="Text to scroll." /></code>
-	customisable like this:
-	<code>
-	<BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="@DisplayText" ScrollDelayMS=@ScrollDelay CharacterCount=@CharacterCount LoopPadding="@LoopPadding" FixHeightPX="@FixHeightPX" />
-	</code>
+	<code><BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="Text to scroll." /></code><br>
+	customisable like this:<br>
+	<code><BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="@DisplayText" ScrollDelayMS=@ScrollDelay CharacterCount=@CharacterCount LoopPadding="@LoopPadding" FixHeightPX="@FixHeightPX" /></code>
 * An LED stack:<br>
-	<img src="media/LEDStack.png" alt="LED Stack" />
-	<code>    <BlazorVintageKit.Components.LEDStack BarValue=@barValue
-                                          BarCount=11
-                                          LowLimit=4
-                                          MedLimit=7 /></code>
+	<img src="media/LEDStack.png" alt="LED Stack" /><br>
+	<code><BlazorVintageKit.Components.LEDStack BarValue=@barValue BarCount=11 LowLimit=4 MedLimit=7 /></code>
 ## Contributing
 ?
 
