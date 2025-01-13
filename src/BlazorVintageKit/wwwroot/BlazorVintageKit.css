@@ -40,3 +40,22 @@
 .stack.onhigh {
     fill: red; /* Color for 'high' state */
 }
+
+
+/*Dial*/
+.dial-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 200px; /* Adjust as needed */
+    height: 200px; /* Adjust as needed */
+    background-color: #f0f0f0; /* Light background color for contrast */
+}
+
+/*.dial {
+    width: 100px;*/ /* Adjust size as needed */
+    /*height: 100px;*/ /* Adjust size as needed */
+    /*background-color: white;
+    border-radius: 50%;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);*/ /* Optional shadow for effect */
+/*}*/
