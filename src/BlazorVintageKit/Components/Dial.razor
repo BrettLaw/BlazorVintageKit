@@ -1,0 +1,261 @@
+﻿<div class="dial-container">
+
+    <svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+
+
+        <!--Outer dial perimeter-->
+        <circle cx="50" cy="50" r="@Options.DialRadius" fill="@Options.DialColour" />
+
+        @if (Options.RiskMode)
+        {
+            <!-- Risk segment -->
+            <g transform="translate(50, 50) rotate(@riskRotate)">
+                <path d="M 0 0 L @Options.DialRadius 0 A @Options.DialRadius @Options.DialRadius 0 0 1 @segmentArc.Item1 @segmentArc.Item2 Z" fill="@Options.RiskColour" />
+            </g>
+        }
+
+        <!-- Circle edge colour -->
+        <circle cx="50" cy="50" r="@Options.DialRadius" stroke="@Options.RimColour" stroke-width="@Options.RimWidth" fill="none" /> 
+
+
+        @if (Options.InnerRing)
+        {
+            <g transform="translate(50, 50) rotate(@rotate)">
+                <path d="M 0 -@Options.FaceRadius A @Options.FaceRadius @Options.FaceRadius 0 @arcV.LargeArcFlag @arcV.SweepFlag @arcV.X @arcV.Y" fill="none" stroke="@Options.FaceColour" />
+            </g>
+        }
+        @if (Options.SmithsMode)
+        {
+            <g transform="translate(50, 50) rotate(@rotate)">
+
+                <path d="M 0 -@(Options.FaceRadius-5) A @(Options.FaceRadius-5) @(Options.FaceRadius-5) 0 @smithsArcV.LargeArcFlag @smithsArcV.SweepFlag @smithsArcV.X @smithsArcV.Y" fill="none" stroke="@Options.FaceColour" />
+
+            </g>
+        }
+
+        <!-- combined dial marks-->
+        <g transform="translate(50, 50) rotate(@rotate)">
+            @for (int i = 0; i <= (Options.IndicatorCount * (Options.SubIndicatorCount + 1)); i++)
+            {
+                var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
+                if (i % (Options.SubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
+                {
+                    <line x1="0" y1="@((Options.FaceRadius-5)*-1)" x2="0" y2="@(Options.FaceRadius*-1)" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
+                }
+                else // Small marks
+                {
+                    <line x1="0" y1="@((Options.FaceRadius-5)*-1)" x2="0" y2="@((Options.FaceRadius)*-1)" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
+                }
+            }
+        </g>
+
+        <!-- text labels -->
+        <g transform="translate(50, @(50+Options.LabelYOffset))">
+            @{
+
+                var angleoffset = (rotate*-1) + charRotation;
+
+                var textoffset = (Options.FaceRadius-10)*-1;
+                for (int i = 0; i <= Options.IndicatorCount; i++)
+                {
+                    var angle = angleoffset - i * (Options.FaceArcAngle/Options.IndicatorCount); // Adjust the angle calculation
+                    var radians = angle * Math.PI / 180; // Convert angle to radians
+                    var x = textoffset * Math.Sin(radians); // Calculate x position
+                    var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                    <text><text x="@x" y="@y" style="cursor:default;" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
+                }
+            }
+        </g>
+
+        @if (Options.ResetPointerMode)
+        {
+            <!-- reset pointer -->
+            <g transform="rotate(@rotate 50 50)">
+                <polygon points="49.7,8 50.3,8 50.6,65 49.4,65" fill="@Options.ResetPointercolour" transform="rotate(@maxPointerAngle 50 50)" id="pointer" />
+            </g>
+            <g transform="rotate(@Options.AdditionalRotation 50 50)">
+                <circle cx="50" cy="90" r="3" stroke-width="2" fill="@Options.ResetButtonColour" @onclick="Reset" style="cursor:pointer;"/>
+            </g>
+        }
+
+
+        <!-- pointer -->
+        <g transform="rotate(@rotate 50 50)">
+
+            <polygon points="49.5,8 50.5,8 51,65 49,65" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
+
+        </g>
+
+        <!--center-->
+        <circle cx="50" cy="50" r="3" stroke-width="2" fill="@Options.FaceColour" />
+        <circle cx="50" cy="50" r="1" stroke-width="2" fill="@Options.DialColour" />
+
+
+        <!-- Text -->
+        <g transform="translate(50, 50)">
+            <text x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="5" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="Courier, monospace">@Options.MakersLabel</text>
+            <text x="@Options.KeyLabelX" y="@Options.KeyLabelY" font-size="5" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;">@Options.KeyLabel</text>
+        </g>
+
+    </svg>
+
+</div>
+
+@code {
+    [Parameter] public DialOptions Options { get; set; } = new DialOptions();
+
+
+    private double rotate = 0;
+    private double perMarkerAngle;
+    private double totalIndicatorCount;
+    private int charRotation = 0;
+    private int indicatorRange => Options.DialRange / Options.IndicatorCount;
+    private (double,double) segmentArc;
+    private double riskRotate;
+
+    private float pointerAngle = 0;
+    private float maxPointerAngle = 0;
+    private float pointerAnglePerIncrement = 0;
+
+    private ArcV arcV;
+    private ArcV smithsArcV;
+
+    protected override void OnInitialized()
+    {
+        UpdateValues();
+    }
+
+    protected override void OnParametersSet()
+    {
+        UpdateValues();
+    }
+
+    private void UpdateValues()
+    {
+        smithsArcV = CalculateArcDetails(Options.FaceRadius-5, Options.FaceArcAngle);
+        arcV = CalculateArcDetails(Options.FaceRadius, Options.FaceArcAngle);
+
+        rotate = CalcRotation(Options.FaceArcAngle, Options.AdditionalRotation);
+
+        segmentArc = CalculateRiskEndpoint(Options.DialRadius, Options.RiskAngle);
+
+        totalIndicatorCount = (Options.IndicatorCount * (Options.SubIndicatorCount + 1));
+        perMarkerAngle = (Options.FaceArcAngle / totalIndicatorCount);
+
+        pointerAnglePerIncrement = (float)Options.FaceArcAngle / Options.DialRange;
+
+        riskRotate = Options.RiskAdditionalRotation + ((Options.RiskAdditionalRotation + 45 - Options.RiskAngle)) + Options.AdditionalRotation + ((Options.FaceArcAngle - 270) / 2);
+
+        CalcBarValue();
+    }
+
+    private void Reset()
+    {
+        maxPointerAngle = pointerAngle;
+    }
+
+    private void CalcBarValue()
+    {
+
+        pointerAngle = Options.DialValue * pointerAnglePerIncrement;
+
+        if (pointerAngle > maxPointerAngle) maxPointerAngle = pointerAngle;
+    }
+
+    private static double CalcRotation(double arcAngle, int offsetRotation)
+    {
+        // Calculate rotation to center missing arc at the bottom
+        return 180 + offsetRotation + (360 - arcAngle) / 2;
+    }
+
+    public static (double, double) CalculateRiskEndpoint(double radius, double angle)
+    {
+        double radians = Math.PI * angle / 180.0; // Convert angle to radians
+        double x = radius * Math.Cos(radians);    // Calculate x-coordinate
+        double y = radius * Math.Sin(radians);    // Calculate y-coordinate
+        return (x, y);
+    }
+
+    static ArcV CalculateArcDetails(double radius, double arcAngle)
+    {
+        int largeArcFlag = arcAngle > 180 ? 1 : 0;
+        int sweepFlag = 1;
+
+        (double x, double y) = CalculateArcEndpoint(radius, arcAngle);
+
+        return new ArcV(x, y, largeArcFlag, sweepFlag);
+    }
+
+
+    static (double, double) CalculateArcEndpoint(double radius, double angleDegrees)
+    {
+        // Convert angle to radians
+        double angleRadians = angleDegrees * Math.PI / 180;
+
+        // Calculate x and y coordinates of the endpoint
+        double x = radius * Math.Sin(angleRadians);  // Sin for x
+        double y = -radius * Math.Cos(angleRadians); // Cos for y, inverted for SVG's coordinate system
+
+        return (x, y);
+    }
+
+    public class DialOptions
+    {
+        public int DialRadius { get; set; } = 45;
+        public int DialRange { get; set; } = 10000;
+        public int DialValue { get; set; } = 0;
+
+        public double FaceArcAngle { get; set; } = 270;
+        public int FaceRadius { get; set; } = 40;
+        public int AdditionalRotation { get; set; }
+
+        public string DialColour { get; set; } = "#000000";
+        public string RimColour { get; set; } = "#666666";
+        public string FaceColour { get; set; } = "#FFFFFF";
+        public string RiskColour { get; set; } = "#BF1818";
+        public string Pointercolour { get; set; }  = "#FFFF00";
+        public string ResetPointercolour { get; set; }  = "#FF0000";
+        public string ResetButtonColour { get; set; }  = "#2E2E2E";
+        public double RimWidth { get; set; } = 2;
+
+        public int IndicatorCount {get;set;} = 10;
+        public int SubIndicatorCount { get; set; } = 4;
+
+        public int LabelYOffset {get;set;} = 2;
+        public int LabelTextRotation {get;set;} = 0;
+        public double LabelFontSize {get;set;} = 5;
+
+        public bool RiskMode { get; set; } = true;
+        public int RiskAdditionalRotation { get; set; }
+        public int RiskAngle { get; set; } = 45;
+
+        public bool InnerRing { get; set; }
+        public bool SmithsMode { get; set; }
+        public bool ResetPointerMode { get; set; }
+
+        public string MakersLabel { get; set; } = "B.V.K.";
+        public string KeyLabel { get; set; } = "RPM x 100";
+        public int KeyLabelX { get; set; } = 0;
+        public int KeyLabelY { get; set; } = 25;
+        public int MakersLabelX { get; set; } = 0;
+        public int MakersLabelY { get; set; } = 10;
+    }
+
+    public class ArcV
+    {
+        public double X { get; }
+        public double Y { get; }
+        public int LargeArcFlag { get; }
+        public int SweepFlag { get; }
+
+        public ArcV(double x, double y, int largeArcFlag, int sweepFlag)
+        {
+            X = x;
+            Y = y;
+            LargeArcFlag = largeArcFlag;
+            SweepFlag = sweepFlag;
+        }
+    }
+
+}

@@ -1,4 +1,4 @@
-﻿@page "/wasmvintagedial"
+﻿@page "/wasmvintagedialtest"
 @rendermode InteractiveWebAssembly
 
 <h3>WASMDial</h3>
@@ -16,7 +16,7 @@
             <!-- Risk segment -->
             <g transform="translate(50, 50) rotate(@riskRotate)">
                 <path d="M 0 0 L 45 0 A 45 45 0 0 1 @segmentArc.Item1 @segmentArc.Item2 Z" fill="@riskcolour" />
-                   @* <path d="M 0 0 L 45 0 A 45 45 0 0 1 @segmentArcV.X @(segmentArcV.Y) Z" fill="darkred" /> *@
+                @* <path d="M 0 0 L 45 0 A 45 45 0 0 1 @segmentArcV.X @(segmentArcV.Y) Z" fill="darkred" /> *@
 
             </g>
         }
@@ -51,20 +51,10 @@
 
         <!-- combined dial marks-->
         <g transform="translate(50, 50) rotate(@rotate)">
-            @for (int i = 0; i <= (indicatorCount * 5); i++)
+            @for (int i = 0; i <= (indicatorCount * (subIndicatorCount + 1)); i++)
             {
-                @* var angle = i * (270.0 / ((indicatorCount * 5))); // 270 degrees divided by the total number of small intervals
-                if (i % 5 == 0) // Every 5th mark is a large mark
-                {
-                    <line x1="0" y1="@((dialMarkerDiameter-5)*-1)" x2="0" y2="@(dialMarkerDiameter*-1)" stroke="@colour" stroke-width="0.5" transform="rotate(@angle)"/>
-                }
-                else // Small marks
-                {
-                    <line x1="0" y1="@((dialMarkerDiameter-5)*-1)" x2="0" y2="@((dialMarkerDiameter)*-1)" stroke="@colour" stroke-width="0.2" transform="rotate(@angle)"/>
-                } *@
-
                 var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
-                if (i % 5 == 0) // Every 5th mark is a large mark
+                if (i % (subIndicatorCount + 1) == 0) // Every 5th mark is a large mark
                 {
                     <line x1="0" y1="@((arcRadius-5)*-1)" x2="0" y2="@(arcRadius*-1)" stroke="@colour" stroke-width="0.5" transform="rotate(@anglePerMark)"/>
                 }
@@ -72,7 +62,6 @@
                 {
                     <line x1="0" y1="@((arcRadius-5)*-1)" x2="0" y2="@((arcRadius)*-1)" stroke="@colour" stroke-width="0.2" transform="rotate(@anglePerMark)"/>
                 }
-                //debugIndicatorCount++;
             }
         </g>
 
@@ -80,16 +69,17 @@
         <!-- text labels -->
         <g transform="translate(50, @(50+charYOffset))">
             @{
-
                 var angleoffset = (rotate*-1) + charRotation;
-
                 var textoffset = (arcRadius-10)*-1;
+
                 for (int i = 0; i <= indicatorCount; i++)
                 {
                     var angle = angleoffset - i * (arcAngle/indicatorCount); // Adjust the angle calculation
                     var radians = angle * Math.PI / 180; // Convert angle to radians
                     var x = textoffset * Math.Sin(radians); // Calculate x position
                     var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                    Console.WriteLine("x="+x+" y="+y);
 
                     <text><text x="@x" y="@y" style="cursor:default;" transform="rotate(@charTextRotation @x @(y-(fontsize)))" font-size="@(fontsize)px" text-anchor="middle" fill="@colour">@((i * indicatorRange / 100).ToString())</text></text>
                 }
@@ -118,7 +108,7 @@
             @* <polygon points="50,10 53,20 51,60 49,60 47,20" fill="@pointercolour" transform="rotate(@barValue 50 50)" id="pointer" /> *@
 
             @* <polygon points="50,@((arcRadius*-1)+55) 53,@((arcRadius*-1)+65) 47,@((arcRadius*-1)+65)" fill="@pointercolour" transform="rotate(@barValue 50 50)" id="pointer" /> *@
-            
+
         </g>
 
 
@@ -141,9 +131,11 @@
 <p>TargetDialValue @targetValue</p>
 <p>Dial Value @DialValue</p>
 <p>Bar Value @barValue</p>
+<p>AngleOffset @angleoffset</p>
+<p>Text Offset @textoffset</p>
 <details>
     <summary>dbg</summary>
-@*     <p>segmentArcV.LargeArcFlag @segmentArcV.LargeArcFlag</p>
+    @*     <p>segmentArcV.LargeArcFlag @segmentArcV.LargeArcFlag</p>
     <p>segmentArcV.SweepFlag @segmentArcV.SweepFlag</p>
     <p>segmentArcV.X @segmentArcV.X</p>
     <p>segmentArcV.Y @segmentArcV.Y</p>
@@ -176,14 +168,17 @@
             <label for="indicatorCount" class="form-label">Indicator Count:</label>
             <input type="number" @onchange="ArcAngleChanged" @bind="indicatorCount" @bind:event="oninput" class="form-control" id="indicatorCount" step="1" style="min-width:6ch;" />
         </div>
-
+        <div style="margin-left:10px;">
+            <label for="subIndicatorCount" class="form-label">Sub Indicator Count:</label>
+            <input type="number" @onchange="ArcAngleChanged" @bind="subIndicatorCount" @bind:event="oninput" class="form-control" id="subIndicatorCount" min="0" max="4" step="1" style="min-width:6ch;" />
+        </div>
 
         <div style="margin-left:10px;">
             <label for="barCount" class="form-label">Arc Angle:</label>
-            <input type="number" @bind="arcAngle" @onchange="ArcAngleChanged" @bind:event="oninput" class="form-control" id="barCount" step="5" style="min-width:6ch;" />
+            <input type="number" @bind="arcAngle" @onchange="ArcAngleChanged" @bind:event="oninput" class="form-control" id="barCount" step="1" style="min-width:6ch;" />
         </div>
 
-@*         <div style="margin-left:10px;">
+        @*         <div style="margin-left:10px;">
             <label for="rotate" class="form-label">rotate:</label>
             <input type="number" @bind="rotate" @bind:event="oninput" class="form-control" id="barCount" step="1" style="min-width:6ch;" />
         </div> *@
@@ -305,7 +300,7 @@
     private (double,double) segmentArc;
     private int segmentRadius = 45;
     private int segmentAngle = 45;
-    private float riskRotate;
+    private double riskRotate;
 
     //display options
     private bool showInnerRing = false;
@@ -318,6 +313,7 @@
     //indicator marks
     private int indicatorCount = 10;
     private int indicatorRange => DialRange / indicatorCount;
+    private int subIndicatorCount = 4;
 
     //private int debugIndicatorCount = 0;
 
@@ -345,7 +341,7 @@
 
     private ArcV arcV;
     private int arcRadius = 40;
-    private int arcAngle = 270; // Adjust arc angle as needed
+    private double arcAngle = 270; // Adjust arc angle as needed
 
     private double rotate = 0;
 
@@ -367,7 +363,7 @@
 
         //segmentArcV = CalculateArcDetails(segmentRadius, segmentAngle);
 
-        expectedIndicatorCount = (indicatorCount * 5);
+        expectedIndicatorCount = (indicatorCount * (subIndicatorCount + 1));
         perMarkerAngle = (arcAngle / expectedIndicatorCount) ;
 
         pointerAnglePerIncrement = (float)arcAngle / DialRange;

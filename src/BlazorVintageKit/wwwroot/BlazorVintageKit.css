@@ -47,9 +47,9 @@
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 200px; /* Adjust as needed */
-    height: 200px; /* Adjust as needed */
-    background-color: #f0f0f0; /* Light background color for contrast */
+    width: 400px; /* Adjust as needed */
+    height: 400px; /* Adjust as needed */
+    /*background-color: #f0f0f0;  Light background color for contrast */
 }
 
 /*.dial {

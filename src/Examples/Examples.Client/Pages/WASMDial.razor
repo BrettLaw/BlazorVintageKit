@@ -1,222 +1,167 @@
 ﻿@page "/wasmdial"
+@using static BlazorVintageKit.Components.Dial
 @rendermode InteractiveWebAssembly
 
 <h3>WASMDial</h3>
 
-<div class="dial-container" style="width:300px;height:300px; background-color:darkslategrey;"> 
+<BlazorVintageKit.Components.Dial Options="@options"/>
 
-    <svg class="dial" viewBox="0 0 100 100">
-
-        <!--Outer dial perimeter-->
-        <circle cx="50" cy="50" r="45" fill="@bgcolour" />
-
-
-        <!-- Risk segment -->
-        <g transform="translate(50, 50) rotate(@segmentRotation)"> 
-            <path d="M 0 0 L 45 0 A 45 45 0 0 1 @segment.Item1 @segment.Item2 Z" fill="darkred" />
-        </g>
-
-        <!-- Circle edge colour -->
-        <circle cx="50" cy="50" r="45" stroke="@colour" stroke-width="2" fill="none" />
-
-        @if (showInnerRing)
-        {
-            <!--Inner dial arc-->
-            <g transform="translate(50, 50) rotate(@rotation)">
-                <path d="M 0 @(dialMarkerDiameter*-1) A @dialMarkerDiameter @dialMarkerDiameter 0 1 1 @(dialMarkerDiameter*-1) 0" stroke="@colour" stroke-width="0.8" fill="none" />
-            </g>
-            @if (smithsMode)
-            {
-                <g transform="translate(50, 50) rotate(@rotation)">
-                    <path d="M 0 @((dialMarkerDiameter-5)*-1) A @((dialMarkerDiameter-5)) @((dialMarkerDiameter-5)) 0 1 1 @((dialMarkerDiameter-5)*-1) 0" stroke="@colour" stroke-width="0.8" fill="none" />
-                </g>
-            }
-        }
-
-        <!-- combined -->
-        <g transform="translate(50, 50) rotate(@rotation)">
-            @for (int i = 0; i <= (indicatorCount * 5); i++)
-            {
-                var angle = i * (270.0 / ((indicatorCount * 5))); // 270 degrees divided by the total number of small intervals
-                if (i % 5 == 0) // Every 5th mark is a large mark
-                {
-                    <line x1="0" y1="@((dialMarkerDiameter-5)*-1)" x2="0" y2="@(dialMarkerDiameter*-1)" stroke="@colour" stroke-width="0.5" transform="rotate(@angle)"/>
-                }
-                else // Small marks
-                {
-                    <line x1="0" y1="@((dialMarkerDiameter-5)*-1)" x2="0" y2="@((dialMarkerDiameter)*-1)" stroke="@colour" stroke-width="0.2" transform="rotate(@angle)"/>
-                }
-            }
-        </g>
-
-        <!-- text labels -->
-        <g transform="translate(50, @(50+charYOffset))">
-            @{
-
-                var angleoffset = (rotation*-1);
-
-                var textoffset = (dialMarkerDiameter-10)*-1;
-                for (int i = 0; i <= indicatorCount; i++)
-                {
-                    var angle = angleoffset - i * (270/indicatorCount); // Adjust the angle calculation
-                    var radians = angle * Math.PI / 180; // Convert angle to radians
-                    var x = textoffset * Math.Sin(radians); // Calculate x position
-                    var y = textoffset * Math.Cos(radians); // Calculate y position
-
-                    <text><text x="@x" y="@y" font-size="6" text-anchor="middle" fill="@colour">@((i * indicatorRange / 100).ToString())</text></text>
-                }
-            }
-        </g>
-
-        <!-- pointer -->
-        <g transform="rotate(@rotation 50 50)">
-
-            <polygon points="49.5,8 50.5,8 51,65 49,65" fill="@pointercolour" transform="rotate(@barValue 50 50)" id="pointer" />
-
-            @* <polygon points="49.5,8 50.5,8 51,65 49,65" fill="@pointercolour" transform="rotate(@barValue 50 50)" id="pointer" /> *@
-
-            <!--<polygon points="50,10 53,20 51,60 49,60 47,20" fill="@pointercolour" transform="rotate(@barValue 50 50)" id="pointer" />
-            -->
-        </g>
-
-        <!--center-->
-        <circle cx="50" cy="50" r="3" stroke-width="2" fill="@colour" />
-        <circle cx="50" cy="50" r="1" stroke-width="2" fill="@bgcolour" />
-
-        <!-- Text -->
-        <g transform="translate(50, 50)">
-            <text x="0" y="10" font-size="5" text-anchor="middle" fill="@colour">@CenterLabel</text>
-
-            <text x="0" y="@keyTextY" font-size="5" text-anchor="middle" fill="@colour">@BottomLabel</text>
-        </g>
-
-    </svg>
-
-
-
-
-</div>
-
-<div>
-    <p>Dial Range = @DialRange</p>
-    <p>Target Value = @targetValue</p>
-    <p>Dial Value = @DialValue</p>
-    <p>Increment = @increment</p>
-    <p>barValue = @barValue</p>
-</div>
-
-
-<label> <input type="checkbox" @onchange="OnAnimateChanged" /> Animate </label>
 
 
 <div class="demo-panel">
+
     <div class="form-group">
         <div style="margin-left:10px;">
-            <label for="DialValue" class="form-label">Dial Value:</label>
-            <input type="number" @onchange="DialValueChanged" @bind="DialValue" @bind:event="oninput" class="form-control" id="DialValue" step="100" style="min-width:6ch;" />
+            <label for="DialValue" class="form-label">DialValue:</label>
+            <input type="number" @bind="options.DialValue" @bind:event="oninput" class="form-control" id="DialValue" step="50" style="min-width:6ch;" />
         </div>
         <div style="margin-left:10px;">
-            <label for="DialRange" class="form-label">Dial Range:</label>
-            <input type="number" @onchange="DialRangeChanged" @bind="DialRange" @bind:event="oninput" class="form-control" id="DialRange" step="100" style="min-width:6ch;" />
-        </div>
-        <div style="margin-left:10px;">
-            <label for="indicatorCount" class="form-label">Indicator Count:</label>
-            <input type="number" @onchange="IndicatorCountChanged" @bind="indicatorCount" @bind:event="oninput" class="form-control" id="indicatorCount" step="1" style="min-width:6ch;" />
-        </div>
-
-
-        <div style="margin-left:10px;">
-            <label for="ArcAngleChanged" class="form-label">Segment Angle:</label>
-            <input type="number" @bind="arcAngle" @onchange="ArcAngleChanged" @bind:event="oninput" class="form-control" id="ArcAngleChanged" step="5" style="min-width:6ch;" />
-        </div>
-
-        <div style="margin-left:10px;">
-            <label for="segmentRotation" class="form-label">Segment rotation:</label>
-            <input type="number" @bind="segmentRotation" @bind:event="oninput" class="form-control" id="segmentRotation" step="5" style="min-width:6ch;" />
-        </div>
-
-        <div style="margin-left:10px;">
-            <label for="dialMarkerDiameter" class="form-label">dialMarkerDiameter:</label>
-            <input type="number" @bind="dialMarkerDiameter" @bind:event="oninput" class="form-control" id="dialMarkerDiameter" step="5" style="min-width:6ch;" />
-        </div>
-
-        <div style="margin-left:10px;">
-            <label for="rotation" class="form-label">rotation:</label>
-            <input type="number" @bind="rotation" @bind:event="oninput" class="form-control" id="rotation" step="5" style="min-width:6ch;" />
-        </div>
-
-        <div style="margin-left:10px;">
-            <label for="keyTextY" class="form-label">keyTextY:</label>
-            <input type="number" @bind="keyTextY" @bind:event="oninput" class="form-control" id="keyTextY" step="1" style="min-width:6ch;" />
-        </div>
-
-        <div style="margin-left:10px;">
-            <label for="showInnerRing" class="form-label">Inner Ring:</label>
-            <label>
-                <input type="checkbox" @bind="showInnerRing" />
-            </label>
-            <label for="smithsMode" class="form-label">smithsMode:</label>
-            <label>
-                <input type="checkbox" @bind="smithsMode" />
-            </label>
+            <label for="DialRange" class="form-label">DialRange:</label>
+            <input type="number" @bind="options.DialRange" @bind:event="oninput" class="form-control" id="DialRange" step="50" style="min-width:6ch;" />
         </div>
     </div>
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="bgcolour" class="form-label">DialColour:</label>
+            <input type="color" @bind="options.DialColour" @bind:event="oninput" class="form-control" id="bgcolour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="rimcolour" class="form-label">RimColour:</label>
+            <input type="color" @bind="options.RimColour" @bind:event="oninput" class="form-control" id="rimcolour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="FaceColour" class="form-label">FaceColour:</label>
+            <input type="color" @bind="options.FaceColour" @bind:event="oninput" class="form-control" id="FaceColour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="Pointercolour" class="form-label">Pointercolour:</label>
+            <input type="color" @bind="options.Pointercolour" @bind:event="oninput" class="form-control" id="Pointercolour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="ResetPointercolour" class="form-label">ResetPointercolour:</label>
+            <input type="color" @bind="options.ResetPointercolour" @bind:event="oninput" class="form-control" id="ResetPointercolour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="ResetButtonColour" class="form-label">ResetButtonColour:</label>
+            <input type="color" @bind="options.ResetButtonColour" @bind:event="oninput" class="form-control" id="ResetButtonColour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="RiskColour" class="form-label">RiskColour:</label>
+            <input type="color" @bind="options.RiskColour" @bind:event="oninput" class="form-control" id="RiskColour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="LabelFontSize" class="form-label">LabelFontSize:</label>
+            <input type="number" @bind="options.LabelFontSize" @bind:event="oninput" class="form-control" id="LabelFontSize" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="IndicatorCount" class="form-label">IndicatorCount:</label>
+            <input type="number" @bind="options.IndicatorCount" @bind:event="oninput" class="form-control" id="IndicatorCount" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="SubIndicatorCount" class="form-label">SubIndicatorCount:</label>
+            <input type="number" @bind="options.SubIndicatorCount" @bind:event="oninput" class="form-control" id="SubIndicatorCount" step="1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="dialradius" class="form-label">DialRadius:</label>
+            <input type="number" @bind="options.DialRadius" @bind:event="oninput" class="form-control" id="dialradius" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="rimwidth" class="form-label">RimWidth:</label>
+            <input type="number" @bind="options.RimWidth" @bind:event="oninput" class="form-control" id="rimwidth" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="facearcangle" class="form-label">FaceArcAngle:</label>
+            <input type="number" @bind="options.FaceArcAngle" @bind:event="oninput" class="form-control" id="facearcangle" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="faceradius" class="form-label">FaceRadius:</label>
+            <input type="number" @bind="options.FaceRadius" @bind:event="oninput" class="form-control" id="faceradius" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="AdditionalRotation" class="form-label">AdditionalRotation:</label>
+            <input type="number" @bind="options.AdditionalRotation" @bind:event="oninput" class="form-control" id="AdditionalRotation" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="RiskAngle" class="form-label">RiskAngle:</label>
+            <input type="number" @bind="options.RiskAngle" @bind:event="oninput" class="form-control" id="RiskAngle" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="RiskAdditionalRotation" class="form-label">RiskAdditionalRotation:</label>
+            <input type="number" @bind="options.RiskAdditionalRotation" @bind:event="oninput" class="form-control" id="RiskAdditionalRotation" step="1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+        <div style="margin-left:10px;">
+            <label for="RiskMode" class="form-label">RiskMode:</label>
+            <label>
+                <input type="checkbox" @bind="options.RiskMode" />
+            </label>
+            <label for="InnerRing" class="form-label">InnerRing:</label>
+            <label>
+                <input type="checkbox" @bind="options.InnerRing" />
+            </label>
+            <label for="SmithsMode" class="form-label">SmithsMode:</label>
+            <label>
+                <input type="checkbox" @bind="options.SmithsMode" />
+            </label>
+            <label for="ResetPointerMode" class="form-label">ResetPointerMode:</label>
+            <label>
+                <input type="checkbox" @bind="options.ResetPointerMode" />
+            </label>
+        </div>
+
+        <div class="form-group">
+            <div style="margin-left:10px;">
+                <label for="MakersLabel" class="form-label">MakersLabel:</label>
+                <input type="text" @bind="options.MakersLabel" @bind:event="oninput" class="form-control" id="MakersLabel" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="MakersLabelX" class="form-label">MakersLabelX:</label>
+                <input type="number" @bind="options.MakersLabelX" @bind:event="oninput" class="form-control" id="MakersLabelX" step="1" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="MakersLabelY" class="form-label">MakersLabelY:</label>
+                <input type="number" @bind="options.MakersLabelY" @bind:event="oninput" class="form-control" id="MakersLabelY" step="1" style="min-width:6ch;" />
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div style="margin-left:10px;">
+                <label for="KeyLabel" class="form-label">KeyLabel:</label>
+                <input type="text" @bind="options.KeyLabel" @bind:event="oninput" class="form-control" id="KeyLabel" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="KeyLabelX" class="form-label">KeyLabelX:</label>
+                <input type="number" @bind="options.KeyLabelX" @bind:event="oninput" class="form-control" id="KeyLabelX" step="1" style="min-width:6ch;" />
+            </div>
+            <div style="margin-left:10px;">
+                <label for="KeyLabelY" class="form-label">KeyLabelY:</label>
+                <input type="number" @bind="options.KeyLabelY" @bind:event="oninput" class="form-control" id="KeyLabelY" step="1" style="min-width:6ch;" />
+            </div>
+        </div>
 </div>
 
+<label> <input type="checkbox" @onchange="OnAnimateChanged" /> Animate </label>
+@options.DialValue
+@code{
+    DialOptions options = new DialOptions();
 
 
-@code {
-    //param
-    private int DialRange = 10000;
-    //param
-    private int DialValue = 0;
 
-    private float barValue = 0;
 
-    private float increment = 0;
-
-    private bool showInnerRing = false;
-    private bool smithsMode = false;
-
+    //animation
     private bool isAnimating;
-
-    private int indicatorCount = 10;
-    private int indicatorRange => DialRange / indicatorCount;
-
-    private int charYOffset = 2;
-
-    private int dialMarkerDiameter = 40;
-
-    private int keyTextY = 25;
-
-    private int rotation = 225;
-
-
-    private string bgcolour = "black";
-    private string colour = "white";
-    private string pointercolour = "#FFFF00";
-
-    private (double, double) segment;
-    private int arcRadius = 45;
-    private int arcAngle = 45;
-    private int segmentRotation = 0;
-
-
-
-    private string CenterLabel = "BVK";
-    private string BottomLabel = "RPM x 100";
-
-    protected override void OnInitialized()
-    {
-        //90 degrees missing.
-        increment = 270f / DialRange;
-
-
-        segment = CalculateEndpoint(arcRadius, arcAngle);
-
-    }
-
-
     private void OnAnimateChanged(ChangeEventArgs e)
     {
         isAnimating = (bool)e.Value!;
@@ -231,69 +176,31 @@
             await Task.Delay(100);
         }
     }
-
-    private void DialValueChanged()
-    {
-        barValue = DialValue * increment;
-    }
-
-    private void DialRangeChanged()
-    {
-        increment = 270f / DialRange;
-    }
-
-    private void IndicatorCountChanged()
-    {
-        
-    }
-    protected void ArcAngleChanged()
-    {
-        segment = CalculateEndpoint(arcRadius, arcAngle);
-    }
-
-
     private int targetValue = 0;
     private int speed = 100;
     private Random random = new Random();
     private void PerformAnimationStep()
     {
-        bool isWithinRange = Math.Abs(DialValue - targetValue) <= speed;
+        bool isWithinRange = Math.Abs(options.DialValue - targetValue) <= speed;
         if (isWithinRange)
         {
-            targetValue = random.Next(0, DialRange);
+            targetValue = random.Next(0, options.DialRange);
 
-            int delta = Math.Abs(DialValue - targetValue)/4;
+            int delta = Math.Abs(options.DialValue - targetValue)/4;
             if (delta < 50) delta = 100;
 
             speed = random.Next(50, delta);
         }
 
-        if (DialValue > targetValue)
+        if (options.DialValue > targetValue)
         {
-            DialValue -= speed;
+            options.DialValue -= speed;
         }
-        else if (barValue < targetValue)
+        else if (options.DialValue < targetValue)
         {
-            DialValue += speed;
+            options.DialValue += speed;
         }
-
-
-        barValue = DialValue * increment;
-
-
         StateHasChanged();
     }
-
-
-    public static (double, double) CalculateEndpoint(double radius, double angle)
-    {
-        double radians = Math.PI * angle / 180.0; // Convert angle to radians
-        double x = radius * Math.Cos(radians);    // Calculate x-coordinate
-        double y = radius * Math.Sin(radians);    // Calculate y-coordinate
-        return (x, y);
-    }
-
-
-
 
 }
