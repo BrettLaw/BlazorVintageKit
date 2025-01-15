@@ -221,6 +221,14 @@
             <label for="LabelFontSize" class="form-label">LabelFontSize:</label>
             <input type="number" @bind="options.LabelFontSize" @bind:event="oninput" class="form-control" id="LabelFontSize" step="0.1" style="min-width:6ch;" />
         </div>
+        <div style="margin-left:10px;">
+            <label for="LabelYOffset" class="form-label">LabelYOffset:</label>
+            <input type="number" @bind="options.LabelYOffset" @bind:event="oninput" class="form-control" id="LabelYOffset" step="0.1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="LabelTextRotation" class="form-label">LabelTextRotation:</label>
+            <input type="number" @bind="options.LabelTextRotation" @bind:event="oninput" class="form-control" id="LabelTextRotation" step="0.1" style="min-width:6ch;" />
+        </div>
     </div>
 
 
@@ -248,22 +256,25 @@
         KeyLabel = "PSI",
         KeyLabelX = 20,
         DialRange = 1400,
-        IndicatorCount = 7,
+        IndicatorCount = 8,
         SubIndicatorCount = 1,
         SmithsMode = true,
-        FaceColour = "#000000",
+        FaceColour = "black",
         DialColour ="#FFFDE7",
-        Pointercolour = "000000",
+        Pointercolour = "black",
+        BossColour = "black",
+        BossCenterColour = "silver",
         RiskColour = "#FE6767",
         RiskAngle = 30,
-        FaceRadius = 43
+        FaceRadius = 43,
+        LabelFontSize = 7.5
     };
 
     static DialOptions ampsOptions = new DialOptions(){
         FaceArcAngle = 180,
         AdditionalRotation = 90,
         DialRange = 300,
-        IndicatorCount = 3,
+        IndicatorCount = 4,
         FaceRadius = 36,
         KeyLabel = "AMPS",
         KeyLabelX = -17,
@@ -277,7 +288,8 @@
         SubIndicatorLength = 3.3,
         PointerLengthAdjust = -10,
         PointerTailLengthAdjust = -11,
-        Pointercolour = "#FF0000"
+        Pointercolour = "#FF0000",
+        BossColour = "#FF0000"
     };
 
     static DialOptions tempOptions = new DialOptions(){
@@ -304,30 +316,35 @@
         ResetPointerMode = true,
         ResetButtonColour = "#A50D0D",
         LabelFont = "verdana",
-        LabelFontSize = 5.5
+        LabelFontSize = 5.5,
+        PointerTailLengthAdjust = -6
     };
 
     static DialOptions voltOptions = new DialOptions(){
+        DialRange = 8000,
         FaceArcAngle = 130,
-        IndicatorCount = 5,
+        IndicatorCount = 6,
         SubIndicatorCount = 0,
         RiskMode = false,
         Pointercolour = "white",
+        BossColour = "white",
         RimColour = "black",
-        FaceRadius = 38,
+        FaceRadius = 45,
         MakersLabel = "blazor vintage kit",
         MakersLabelY = 14,
         MakersLabelFont = "cursive",
         KeyLabel = "volts",
-        PointerLengthAdjust = -8,
+        PointerLengthAdjust = -5,
         PointerTailLengthAdjust = -7,
         ResetPointerMode = true,
-        InnerRing = true
+        InnerRing = true,
+        ResetButtonColour = "white",
+        LabelFontSize = 7
     };
 
     static DialOptions thingsOptions = new DialOptions(){
         DialRange = 500,
-        IndicatorCount = 5,
+        IndicatorCount = 6,
         RiskMode = false,
         FaceArcAngle = 230,
         AdditionalRotation = 180,
@@ -377,7 +394,7 @@
     {
         foreach(OptionsWrapper o in optionsList)
         {
-            double maxspeed = (o.dialOptions.DialRange/100)*10;
+            double maxspeed = (o.dialOptions.DialRange/100)*4;
             double minspeed = (o.dialOptions.DialRange/100)*3;
 
             if (o.dialOptions.DialValue > o.dialOptions.DialRange) 

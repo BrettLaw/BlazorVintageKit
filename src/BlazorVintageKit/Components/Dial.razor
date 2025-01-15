@@ -33,7 +33,7 @@
 
     <!-- combined dial marks-->
     <g transform="translate(50, 50) rotate(@rotate)">
-        @for (int i = 0; i <= (Options.IndicatorCount * (Options.SubIndicatorCount + 1)); i++)
+        @for (int i = 0; i <= ((Options.IndicatorCount-1) * (Options.SubIndicatorCount + 1)); i++)
         {
             var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
             if (i % (Options.SubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
@@ -50,28 +50,28 @@
     <!-- text labels -->
     <g transform="translate(50, @(50+Options.LabelYOffset))">
         @{
-
             var angleoffset = (rotate*-1) + charRotation;
             var textoffset = (Options.FaceRadius-10)*-1;
+
             if (Options.ReverseMode)
             {
-                for (int i = 0; i <= Options.IndicatorCount; i++)
+                for (int i = 0; i <= (Options.IndicatorCount-1); i++)
                 {
-                    var angle = angleoffset - i * (Options.FaceArcAngle / Options.IndicatorCount); // Adjust the angle calculation
+                    var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
                     var radians = angle * Math.PI / 180; // Convert angle to radians
                     var x = textoffset * Math.Sin(radians); // Calculate x position
                     var y = textoffset * Math.Cos(radians); // Calculate y position
 
-                    int k = Options.IndicatorCount - i;
+                    int k = (Options.IndicatorCount-1) - i;
 
-                    <text><text x="@x" y="@y" style="cursor:default;" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((k * indicatorRange / 100).ToString())</text></text>
+                    <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((k * indicatorRange / 100).ToString())</text></text>
                 }
             }
             else
             {
-                for (int i = 0; i <= Options.IndicatorCount; i++)
+                for (int i = 0; i <= (Options.IndicatorCount-1); i++)
                 {
-                    var angle = angleoffset - i * (Options.FaceArcAngle / Options.IndicatorCount); // Adjust the angle calculation
+                    var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
                     var radians = angle * Math.PI / 180; // Convert angle to radians
                     var x = textoffset * Math.Sin(radians); // Calculate x position
                     var y = textoffset * Math.Cos(radians); // Calculate y position
@@ -79,6 +79,7 @@
                     <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
                 }
             }
+            
         }
     </g>
 
@@ -97,14 +98,16 @@
     <!-- pointer -->
     <g transform="rotate(@rotate 50 50)">
 
-        @if(Options.AlternatePointer)
-        {
-            <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
-        }
-        else
-        {
-            <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
-        }
+
+            @if(Options.AlternatePointer)
+            {
+                <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
+            }
+            else
+            {
+                <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
+            }
+
 
     </g>
 
@@ -132,7 +135,7 @@
     private double perMarkerAngle;
     private double totalIndicatorCount;
     private int charRotation = 0;
-    private int indicatorRange => Options.DialRange == 0 ? 1 : Options.DialRange / Options.IndicatorCount;
+    private int indicatorRange => Options.DialRange == 0 ? 1 : Options.DialRange / (Options.IndicatorCount-1);
     private (double,double) segmentArc;
     private double riskRotate;
 
@@ -163,7 +166,7 @@
 
         segmentArc = CalculateRiskEndpoint(Options.DialRadius, Options.RiskAngle);
 
-        totalIndicatorCount = (Options.IndicatorCount * (Options.SubIndicatorCount + 1));
+        totalIndicatorCount = ((Options.IndicatorCount-1) * (Options.SubIndicatorCount + 1));
         perMarkerAngle = (Options.FaceArcAngle / totalIndicatorCount);
 
         pointerAnglePerIncrement = (float)Options.FaceArcAngle / Options.DialRange;

@@ -16,10 +16,4 @@
     <ProjectReference Include="..\..\BlazorVintageKit\BlazorVintageKit.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <Content Update="Pages\WASMVintageDialSegment.razor">
-      <ExcludeFromSingleFile>true</ExcludeFromSingleFile>
-    </Content>
-  </ItemGroup>
-
 </Project>
