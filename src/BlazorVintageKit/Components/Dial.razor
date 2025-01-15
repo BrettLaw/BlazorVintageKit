@@ -44,7 +44,7 @@
                 }
                 else // Small marks
                 {
-                    <line x1="0" y1="@((Options.FaceRadius-5)*-1)" x2="0" y2="@((Options.FaceRadius)*-1)" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
+                    <line x1="0" y1="@((Options.FaceRadius-Options.SubIndicatorLength)*-1)" x2="0" y2="@((Options.FaceRadius)*-1)" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
                 }
             }
         </g>
@@ -91,7 +91,7 @@
             {
                 <polygon points="49.5,8 50.5,8 51,65 49,65" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
             }
-            
+
         </g>
 
         <!--center-->
@@ -228,6 +228,7 @@
 
         public int IndicatorCount {get;set;} = 10;
         public int SubIndicatorCount { get; set; } = 4;
+        public double SubIndicatorLength { get; set; } = 5;
 
         public int LabelYOffset {get;set;} = 2;
         public int LabelTextRotation {get;set;} = 0;

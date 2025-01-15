@@ -9,8 +9,8 @@
 
 
 <div class="demo-panel">
-
-    <div class="form-group">
+    <label> <input type="checkbox" @onchange="OnAnimateChanged" /> Animate </label>
+        <div class="form-group">
         <div style="margin-left:10px;">
             <label for="DialValue" class="form-label">DialValue:</label>
             <input type="number" @bind="options.DialValue" @bind:event="oninput" class="form-control" id="DialValue" step="50" style="min-width:6ch;" />
@@ -64,6 +64,10 @@
         <div style="margin-left:10px;">
             <label for="SubIndicatorCount" class="form-label">SubIndicatorCount:</label>
             <input type="number" @bind="options.SubIndicatorCount" @bind:event="oninput" class="form-control" id="SubIndicatorCount" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="SubIndicatorLength" class="form-label">SubIndicatorLength:</label>
+            <input type="number" @bind="options.SubIndicatorLength" @bind:event="oninput" class="form-control" id="SubIndicatorLength" step="0.1" style="min-width:6ch;" />
         </div>
     </div>
 
@@ -156,8 +160,6 @@
     </div>
 </div>
 
-<label> <input type="checkbox" @onchange="OnAnimateChanged" /> Animate </label>
-@options.DialValue
 @code{
     DialOptions options = new DialOptions();
 
