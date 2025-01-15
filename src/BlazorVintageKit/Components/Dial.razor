@@ -83,8 +83,15 @@
         <!-- pointer -->
         <g transform="rotate(@rotate 50 50)">
 
-            <polygon points="49.5,8 50.5,8 51,65 49,65" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
-
+            @if(Options.AlternatePointer)
+            {
+                <polygon points="50,@((Options.FaceRadius*-1)+55) 53,@((Options.FaceRadius*-1)+65) 47,@((Options.FaceRadius*-1)+65)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
+            }
+            else
+            {
+                <polygon points="49.5,8 50.5,8 51,65 49,65" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
+            }
+            
         </g>
 
         <!--center-->
@@ -233,6 +240,7 @@
         public bool InnerRing { get; set; }
         public bool SmithsMode { get; set; }
         public bool ResetPointerMode { get; set; }
+        public bool AlternatePointer { get; set; }
 
         public string MakersLabel { get; set; } = "B.V.K.";
         public string KeyLabel { get; set; } = "RPM x 100";

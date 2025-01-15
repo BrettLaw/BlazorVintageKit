@@ -102,54 +102,58 @@
         </div>
     </div>
 
+    <div style="margin-left:10px;">
+        <label for="RiskMode" class="form-label">RiskMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.RiskMode" />
+        </label>
+        <label for="InnerRing" class="form-label">InnerRing:</label>
+        <label>
+            <input type="checkbox" @bind="options.InnerRing" />
+        </label>
+        <label for="SmithsMode" class="form-label">SmithsMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.SmithsMode" />
+        </label>
+        <label for="ResetPointerMode" class="form-label">ResetPointerMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.ResetPointerMode" />
+        </label>
+        <label for="AlternatePointer" class="form-label">AlternatePointer:</label>
+        <label>
+            <input type="checkbox" @bind="options.AlternatePointer" />
+        </label>
+    </div>
+
+    <div class="form-group">
         <div style="margin-left:10px;">
-            <label for="RiskMode" class="form-label">RiskMode:</label>
-            <label>
-                <input type="checkbox" @bind="options.RiskMode" />
-            </label>
-            <label for="InnerRing" class="form-label">InnerRing:</label>
-            <label>
-                <input type="checkbox" @bind="options.InnerRing" />
-            </label>
-            <label for="SmithsMode" class="form-label">SmithsMode:</label>
-            <label>
-                <input type="checkbox" @bind="options.SmithsMode" />
-            </label>
-            <label for="ResetPointerMode" class="form-label">ResetPointerMode:</label>
-            <label>
-                <input type="checkbox" @bind="options.ResetPointerMode" />
-            </label>
+            <label for="MakersLabel" class="form-label">MakersLabel:</label>
+            <input type="text" @bind="options.MakersLabel" @bind:event="oninput" class="form-control" id="MakersLabel" style="min-width:6ch;" />
         </div>
+        <div style="margin-left:10px;">
+            <label for="MakersLabelX" class="form-label">MakersLabelX:</label>
+            <input type="number" @bind="options.MakersLabelX" @bind:event="oninput" class="form-control" id="MakersLabelX" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="MakersLabelY" class="form-label">MakersLabelY:</label>
+            <input type="number" @bind="options.MakersLabelY" @bind:event="oninput" class="form-control" id="MakersLabelY" step="1" style="min-width:6ch;" />
+        </div>
+    </div>
 
-        <div class="form-group">
-            <div style="margin-left:10px;">
-                <label for="MakersLabel" class="form-label">MakersLabel:</label>
-                <input type="text" @bind="options.MakersLabel" @bind:event="oninput" class="form-control" id="MakersLabel" style="min-width:6ch;" />
-            </div>
-            <div style="margin-left:10px;">
-                <label for="MakersLabelX" class="form-label">MakersLabelX:</label>
-                <input type="number" @bind="options.MakersLabelX" @bind:event="oninput" class="form-control" id="MakersLabelX" step="1" style="min-width:6ch;" />
-            </div>
-            <div style="margin-left:10px;">
-                <label for="MakersLabelY" class="form-label">MakersLabelY:</label>
-                <input type="number" @bind="options.MakersLabelY" @bind:event="oninput" class="form-control" id="MakersLabelY" step="1" style="min-width:6ch;" />
-            </div>
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="KeyLabel" class="form-label">KeyLabel:</label>
+            <input type="text" @bind="options.KeyLabel" @bind:event="oninput" class="form-control" id="KeyLabel" style="min-width:6ch;" />
         </div>
-
-        <div class="form-group">
-            <div style="margin-left:10px;">
-                <label for="KeyLabel" class="form-label">KeyLabel:</label>
-                <input type="text" @bind="options.KeyLabel" @bind:event="oninput" class="form-control" id="KeyLabel" style="min-width:6ch;" />
-            </div>
-            <div style="margin-left:10px;">
-                <label for="KeyLabelX" class="form-label">KeyLabelX:</label>
-                <input type="number" @bind="options.KeyLabelX" @bind:event="oninput" class="form-control" id="KeyLabelX" step="1" style="min-width:6ch;" />
-            </div>
-            <div style="margin-left:10px;">
-                <label for="KeyLabelY" class="form-label">KeyLabelY:</label>
-                <input type="number" @bind="options.KeyLabelY" @bind:event="oninput" class="form-control" id="KeyLabelY" step="1" style="min-width:6ch;" />
-            </div>
+        <div style="margin-left:10px;">
+            <label for="KeyLabelX" class="form-label">KeyLabelX:</label>
+            <input type="number" @bind="options.KeyLabelX" @bind:event="oninput" class="form-control" id="KeyLabelX" step="1" style="min-width:6ch;" />
         </div>
+        <div style="margin-left:10px;">
+            <label for="KeyLabelY" class="form-label">KeyLabelY:</label>
+            <input type="number" @bind="options.KeyLabelY" @bind:event="oninput" class="form-control" id="KeyLabelY" step="1" style="min-width:6ch;" />
+        </div>
+    </div>
 </div>
 
 <label> <input type="checkbox" @onchange="OnAnimateChanged" /> Animate </label>
@@ -176,20 +180,28 @@
             await Task.Delay(100);
         }
     }
+
     private int targetValue = 0;
-    private int speed = 100;
+    private int speed = 10;
     private Random random = new Random();
     private void PerformAnimationStep()
     {
+
+        double maxspeed = (options.DialRange/100)*10;
+        double minspeed = (options.DialRange/100)*3;
+
+        if (options.DialValue > options.DialRange) 
+        {
+            options.DialValue = 0;
+            targetValue = options.DialRange / 2;
+        }
+
         bool isWithinRange = Math.Abs(options.DialValue - targetValue) <= speed;
         if (isWithinRange)
         {
             targetValue = random.Next(0, options.DialRange);
 
-            int delta = Math.Abs(options.DialValue - targetValue)/4;
-            if (delta < 50) delta = 100;
-
-            speed = random.Next(50, delta);
+            speed = random.Next((int)minspeed, (int)maxspeed);
         }
 
         if (options.DialValue > targetValue)
