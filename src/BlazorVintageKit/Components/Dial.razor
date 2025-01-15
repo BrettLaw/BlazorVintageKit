@@ -1,127 +1,127 @@
-﻿    <svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+﻿<svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
 
 
-        <!--Outer dial perimeter-->
-        <circle cx="50" cy="50" r="@Options.DialRadius" fill="@Options.DialColour" />
+    <!--Outer dial perimeter-->
+    <circle cx="50" cy="50" r="@Options.DialRadius" fill="@Options.DialColour" />
 
-        @if (Options.RiskMode)
-        {
-            <!-- Risk segment -->
-            <g transform="translate(50, 50) rotate(@riskRotate)">
-                <path d="M 0 0 L @Options.DialRadius 0 A @Options.DialRadius @Options.DialRadius 0 0 1 @segmentArc.Item1 @segmentArc.Item2 Z" fill="@Options.RiskColour" />
-            </g>
-        }
+    @if (Options.RiskMode)
+    {
+        <!-- Risk segment -->
+        <g transform="translate(50, 50) rotate(@riskRotate)">
+            <path d="M 0 0 L @Options.DialRadius 0 A @Options.DialRadius @Options.DialRadius 0 0 1 @segmentArc.Item1 @segmentArc.Item2 Z" fill="@Options.RiskColour" />
+        </g>
+    }
 
-        <!-- Circle edge colour -->
-        <circle cx="50" cy="50" r="@Options.DialRadius" stroke="@Options.RimColour" stroke-width="@Options.RimWidth" fill="none" /> 
+    <!-- Circle edge colour -->
+    <circle cx="50" cy="50" r="@Options.DialRadius" stroke="@Options.RimColour" stroke-width="@Options.RimWidth" fill="none" /> 
 
 
-        @if (Options.InnerRing)
-        {
-            <g transform="translate(50, 50) rotate(@rotate)">
-                <path d="M 0 -@Options.FaceRadius A @Options.FaceRadius @Options.FaceRadius 0 @arcV.LargeArcFlag @arcV.SweepFlag @arcV.X @arcV.Y" fill="none" stroke="@Options.FaceColour" />
-            </g>
-        }
-        @if (Options.SmithsMode)
-        {
-            <g transform="translate(50, 50) rotate(@rotate)">
-
-                <path d="M 0 -@(Options.FaceRadius-5) A @(Options.FaceRadius-5) @(Options.FaceRadius-5) 0 @smithsArcV.LargeArcFlag @smithsArcV.SweepFlag @smithsArcV.X @smithsArcV.Y" fill="none" stroke="@Options.FaceColour" />
-
-            </g>
-        }
-
-        <!-- combined dial marks-->
+    @if (Options.InnerRing)
+    {
         <g transform="translate(50, 50) rotate(@rotate)">
-            @for (int i = 0; i <= (Options.IndicatorCount * (Options.SubIndicatorCount + 1)); i++)
-            {
-                var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
-                if (i % (Options.SubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
-                {
-                    <line x1="0" y1="@((Options.FaceRadius-5)*-1)" x2="0" y2="@(Options.FaceRadius*-1)" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
-                }
-                else // Small marks
-                {
-                    <line x1="0" y1="@((Options.FaceRadius-Options.SubIndicatorLength)*-1)" x2="0" y2="@((Options.FaceRadius)*-1)" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
-                }
-            }
+            <path d="M 0 -@Options.FaceRadius A @Options.FaceRadius @Options.FaceRadius 0 @arcV.LargeArcFlag @arcV.SweepFlag @arcV.X @arcV.Y" fill="none" stroke="@Options.FaceColour" />
         </g>
+    }
+    @if (Options.SmithsMode)
+    {
+        <g transform="translate(50, 50) rotate(@rotate)">
 
-        <!-- text labels -->
-        <g transform="translate(50, @(50+Options.LabelYOffset))">
-            @{
+            <path d="M 0 -@(Options.FaceRadius-5) A @(Options.FaceRadius-5) @(Options.FaceRadius-5) 0 @smithsArcV.LargeArcFlag @smithsArcV.SweepFlag @smithsArcV.X @smithsArcV.Y" fill="none" stroke="@Options.FaceColour" />
 
-                var angleoffset = (rotate*-1) + charRotation;
-                var textoffset = (Options.FaceRadius-10)*-1;
-                if (Options.ReverseMode)
-                {
-                    for (int i = 0; i <= Options.IndicatorCount; i++)
-                    {
-                        var angle = angleoffset - i * (Options.FaceArcAngle / Options.IndicatorCount); // Adjust the angle calculation
-                        var radians = angle * Math.PI / 180; // Convert angle to radians
-                        var x = textoffset * Math.Sin(radians); // Calculate x position
-                        var y = textoffset * Math.Cos(radians); // Calculate y position
-
-                        int k = Options.IndicatorCount - i;
-
-                        <text><text x="@x" y="@y" style="cursor:default;" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((k * indicatorRange / 100).ToString())</text></text>
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i <= Options.IndicatorCount; i++)
-                    {
-                        var angle = angleoffset - i * (Options.FaceArcAngle / Options.IndicatorCount); // Adjust the angle calculation
-                        var radians = angle * Math.PI / 180; // Convert angle to radians
-                        var x = textoffset * Math.Sin(radians); // Calculate x position
-                        var y = textoffset * Math.Cos(radians); // Calculate y position
-
-                        <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
-                    }
-                }
-            }
         </g>
+    }
 
-        @if (Options.ResetPointerMode)
+    <!-- combined dial marks-->
+    <g transform="translate(50, 50) rotate(@rotate)">
+        @for (int i = 0; i <= (Options.IndicatorCount * (Options.SubIndicatorCount + 1)); i++)
         {
-            <!-- reset pointer -->
-            <g transform="rotate(@rotate 50 50)">
-                <polygon points="49.7,8 50.3,8 50.6,65 49.4,65" fill="@Options.ResetPointercolour" transform="rotate(@maxPointerAngle 50 50)" id="pointer" />
-            </g>
-            <g transform="rotate(@Options.AdditionalRotation 50 50)">
-                <circle cx="50" cy="90" r="3" stroke-width="2" fill="@Options.ResetButtonColour" @onclick="Reset" style="cursor:pointer;"/>
-            </g>
-        }
-
-
-        <!-- pointer -->
-        <g transform="rotate(@rotate 50 50)">
-
-            @if(Options.AlternatePointer)
+            var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
+            if (i % (Options.SubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
             {
-                <polygon points="50,@((Options.FaceRadius*-1)+55) 53,@((Options.FaceRadius*-1)+65) 47,@((Options.FaceRadius*-1)+65)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
+                <line x1="0" y1="@((Options.FaceRadius-5)*-1)" x2="0" y2="@(Options.FaceRadius*-1)" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
+            }
+            else // Small marks
+            {
+                <line x1="0" y1="@((Options.FaceRadius-Options.SubIndicatorLength)*-1)" x2="0" y2="@((Options.FaceRadius)*-1)" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
+            }
+        }
+    </g>
+
+    <!-- text labels -->
+    <g transform="translate(50, @(50+Options.LabelYOffset))">
+        @{
+
+            var angleoffset = (rotate*-1) + charRotation;
+            var textoffset = (Options.FaceRadius-10)*-1;
+            if (Options.ReverseMode)
+            {
+                for (int i = 0; i <= Options.IndicatorCount; i++)
+                {
+                    var angle = angleoffset - i * (Options.FaceArcAngle / Options.IndicatorCount); // Adjust the angle calculation
+                    var radians = angle * Math.PI / 180; // Convert angle to radians
+                    var x = textoffset * Math.Sin(radians); // Calculate x position
+                    var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                    int k = Options.IndicatorCount - i;
+
+                    <text><text x="@x" y="@y" style="cursor:default;" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((k * indicatorRange / 100).ToString())</text></text>
+                }
             }
             else
             {
-                <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
+                for (int i = 0; i <= Options.IndicatorCount; i++)
+                {
+                    var angle = angleoffset - i * (Options.FaceArcAngle / Options.IndicatorCount); // Adjust the angle calculation
+                    var radians = angle * Math.PI / 180; // Convert angle to radians
+                    var x = textoffset * Math.Sin(radians); // Calculate x position
+                    var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                    <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
+                }
             }
+        }
+    </g>
 
+    @if (Options.ResetPointerMode)
+    {
+        <!-- reset pointer -->
+        <g transform="rotate(@rotate 50 50)">
+            <polygon points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" transform="rotate(@maxPointerAngle 50 50)" id="pointer" />
         </g>
+        <g transform="rotate(@Options.AdditionalRotation 50 50)">
+            <circle cx="50" cy="90" r="3" stroke-width="2" fill="@Options.ResetButtonColour" @onclick="Reset" style="cursor:pointer;"/>
+        </g>
+    }
 
-        <!--center-->
-        @if (!Options.AlternatePointer)
+
+    <!-- pointer -->
+    <g transform="rotate(@rotate 50 50)">
+
+        @if(Options.AlternatePointer)
         {
-            <circle cx="50" cy="50" r="3" stroke-width="2" fill="@Options.BossColour" />
-            <circle cx="50" cy="50" r="1" stroke-width="2" fill="@Options.BossCenterColour" />
+            <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
+        }
+        else
+        {
+            <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
         }
 
-        <!-- Text -->
-        <g transform="translate(50, 50)">
-            <text x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="@Options.MakersLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.MakersLabelFont">@Options.MakersLabel</text>
-            <text x="@Options.KeyLabelX" y="@Options.KeyLabelY" font-size="@Options.KeyLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.KeyLabelFont">@Options.KeyLabel</text>
-        </g>
+    </g>
 
-    </svg>
+    <!--center-->
+    @if (!Options.AlternatePointer)
+    {
+        <circle cx="50" cy="50" r="3" stroke-width="2" fill="@Options.BossColour" />
+        <circle cx="50" cy="50" r="1" stroke-width="2" fill="@Options.BossCenterColour" />
+    }
+
+    <!-- Text -->
+    <g transform="translate(50, 50)">
+        <text x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="@Options.MakersLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.MakersLabelFont">@Options.MakersLabel</text>
+        <text x="@Options.KeyLabelX" y="@Options.KeyLabelY" font-size="@Options.KeyLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.KeyLabelFont">@Options.KeyLabel</text>
+    </g>
+
+</svg>
 
 
 @code {
@@ -146,6 +146,7 @@
     protected override void OnInitialized()
     {
         UpdateValues();
+        maxPointerAngle = pointerAngle;
     }
 
     protected override void OnParametersSet()

@@ -6,24 +6,27 @@
 <h3>WASMDial</h3>
 
 <div style="display:flex;flex-direction:row">
-    <div style="width:400px;">
+    <div style="width:500px;">
         <BlazorVintageKit.Components.Dial Options="@options"/>
     </div>
     <div style="display:flex">
-        <div style="width:200px;"> 
+        <div style="width:250px;"> 
             <div>
                 <BlazorVintageKit.Components.Dial Options="@boostOptions"/>
             </div>
             <div>
-                <BlazorVintageKit.Components.Dial Options="@ampsOptions"/>
-            </div>
-        </div>
-        <div style="width:200px;">
-            <div>
                 <BlazorVintageKit.Components.Dial Options="@tempOptions"/>
             </div>
+        </div>
+        <div style="width:170px;">
             <div>
+                <BlazorVintageKit.Components.Dial Options="@ampsOptions"/>
+            </div>
+            <div style="background-color: black;border-color: antiquewhite;border: groove;">
                 <BlazorVintageKit.Components.Dial Options="@voltOptions"/>
+            </div>
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@thingsOptions"/>
             </div>
         </div>
     </div>
@@ -252,6 +255,7 @@
         DialColour ="#FFFDE7",
         Pointercolour = "000000",
         RiskColour = "#FE6767",
+        RiskAngle = 30,
         FaceRadius = 43
     };
 
@@ -272,7 +276,7 @@
         SubIndicatorCount = 1,
         SubIndicatorLength = 3.3,
         PointerLengthAdjust = -10,
-        PointerTailLengthAdjust = -1,
+        PointerTailLengthAdjust = -11,
         Pointercolour = "#FF0000"
     };
 
@@ -282,10 +286,10 @@
         ReverseMode = true,
         SubIndicatorCount = 3,
         MakersLabelX = -19,
-        KeyLabel = "Celcius",
+        KeyLabel = "°C * 10",
         KeyLabelX = -19.5,
         KeyLabelY = 20,
-        KeyLabelFontSize = 5.6,
+        KeyLabelFontSize = 6.5,
         DialColour = "white",
         FaceColour = "black",
         Pointercolour = "#OO1EFF",
@@ -297,7 +301,10 @@
         RiskAdditionalRotation = 72,
         RiskAngle = 54,
         RiskColour = "#DD9898",
-        ResetPointerMode = true
+        ResetPointerMode = true,
+        ResetButtonColour = "#A50D0D",
+        LabelFont = "verdana",
+        LabelFontSize = 5.5
     };
 
     static DialOptions voltOptions = new DialOptions(){
@@ -306,10 +313,35 @@
         SubIndicatorCount = 0,
         RiskMode = false,
         Pointercolour = "white",
-        RimColour = "white",
+        RimColour = "black",
         FaceRadius = 38,
         MakersLabel = "blazor vintage kit",
-        MakersLabelY = 14
+        MakersLabelY = 14,
+        MakersLabelFont = "cursive",
+        KeyLabel = "volts",
+        PointerLengthAdjust = -8,
+        PointerTailLengthAdjust = -7,
+        ResetPointerMode = true,
+        InnerRing = true
+    };
+
+    static DialOptions thingsOptions = new DialOptions(){
+        DialRange = 500,
+        IndicatorCount = 5,
+        RiskMode = false,
+        FaceArcAngle = 230,
+        AdditionalRotation = 180,
+        ReverseMode = true,
+        AlternatePointer = true,
+        FaceRadius = 38,
+        MakersLabel = string.Empty,
+        KeyLabelY = -23,
+        KeyLabel = "THINGS / MIN",
+        KeyLabelFont = "verdana",
+        LabelFontSize = 7,
+        Pointercolour = "#00FF1E",
+        DialColour = "#222F4F",
+        FaceColour = "#FFF700"
     };
 
 
@@ -318,7 +350,8 @@
     new OptionsWrapper (){dialOptions = boostOptions }, 
     new OptionsWrapper (){dialOptions = ampsOptions },
     new OptionsWrapper (){dialOptions = tempOptions }, 
-    new OptionsWrapper (){dialOptions = voltOptions }];
+    new OptionsWrapper (){dialOptions = voltOptions },
+    new OptionsWrapper (){dialOptions = thingsOptions }];
 
     //animation
     private bool isAnimating;
