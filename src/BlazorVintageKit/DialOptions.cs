@@ -37,7 +37,7 @@ namespace BlazorVintageKit
         public string LabelFont { get; set; } = "Courier, monospace";
 
         public bool RiskMode { get; set; } = true;
-        public int RiskAdditionalRotation { get; set; }
+        public double RiskAdditionalRotation { get; set; }
         public int RiskAngle { get; set; } = 45;
 
         public bool InnerRing { get; set; }
@@ -52,10 +52,10 @@ namespace BlazorVintageKit
         public string KeyLabel { get; set; } = "RPM x 100";
         public string KeyLabelFont { get; set; } = "Courier, monospace";
         public double KeyLabelFontSize { get; set; } = 5;
-        public int KeyLabelX { get; set; } = 0;
-        public int KeyLabelY { get; set; } = 25;
-        public int MakersLabelX { get; set; } = 0;
-        public int MakersLabelY { get; set; } = 10;
+        public double KeyLabelX { get; set; } = 0;
+        public double KeyLabelY { get; set; } = 25;
+        public double MakersLabelX { get; set; } = 0;
+        public double MakersLabelY { get; set; } = 10;
 
         public double PointerLengthAdjust { get; set; } = 0;
         public double PointerTailLengthAdjust { get; set; } = 0;

@@ -43,14 +43,14 @@
 
 
 /*Dial*/
-.dial-container {
+/*.dial-container {
     display: flex;
     justify-content: center;
     align-items: center;
-    width: 400px; /* Adjust as needed */
-    height: 400px; /* Adjust as needed */
+    width: 400px;*/ /* Adjust as needed */
+    /*height: 400px;*/ /* Adjust as needed */
     /*background-color: #f0f0f0;  Light background color for contrast */
-}
+/*}*/
 
 /*.dial {
     width: 100px;*/ /* Adjust size as needed */

@@ -5,13 +5,34 @@
 
 <h3>WASMDial</h3>
 
-<BlazorVintageKit.Components.Dial Options="@options"/>
-
+<div style="display:flex;flex-direction:row">
+    <div style="width:400px;">
+        <BlazorVintageKit.Components.Dial Options="@options"/>
+    </div>
+    <div style="display:flex">
+        <div style="width:200px;"> 
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@boostOptions"/>
+            </div>
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@ampsOptions"/>
+            </div>
+        </div>
+        <div style="width:200px;">
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@tempOptions"/>
+            </div>
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@voltOptions"/>
+            </div>
+        </div>
+    </div>
+</div>
 
 
 <div class="demo-panel">
     <label> <input type="checkbox" @onchange="OnAnimateChanged" /> Animate </label>
-        <div class="form-group">
+    <div class="form-group">
         <div style="margin-left:10px;">
             <label for="DialValue" class="form-label">DialValue:</label>
             <input type="number" @bind="options.DialValue" @bind:event="oninput" class="form-control" min="0" max="@options.DialRange" id="DialValue" step="50" style="min-width:6ch;" />
@@ -59,7 +80,7 @@
             <label for="BossCenterColour" class="form-label">BossCenterColour:</label>
             <input type="color" @bind="options.BossCenterColour" @bind:event="oninput" class="form-control" id="BossCenterColour"/>
         </div>
-        
+
     </div>
 
     <div class="form-group">
@@ -199,7 +220,7 @@
         </div>
     </div>
 
-    
+
     <div class="form-group">
         <div style="margin-left:10px;">
             <label for="PointerLengthAdjust" class="form-label">PointerLengthAdjust:</label>
@@ -214,10 +235,90 @@
 </div>
 
 @code{
-    DialOptions options = new DialOptions();
+    static DialOptions options = new DialOptions();
+
+    static DialOptions boostOptions = new DialOptions(){
+        FaceArcAngle = 250,
+        AdditionalRotation = -55,
+        MakersLabelX = 20,
+        MakersLabelY = 13,
+        KeyLabel = "PSI",
+        KeyLabelX = 20,
+        DialRange = 1400,
+        IndicatorCount = 7,
+        SubIndicatorCount = 1,
+        SmithsMode = true,
+        FaceColour = "#000000",
+        DialColour ="#FFFDE7",
+        Pointercolour = "000000",
+        RiskColour = "#FE6767",
+        FaceRadius = 43
+    };
+
+    static DialOptions ampsOptions = new DialOptions(){
+        FaceArcAngle = 180,
+        AdditionalRotation = 90,
+        DialRange = 300,
+        IndicatorCount = 3,
+        FaceRadius = 36,
+        KeyLabel = "AMPS",
+        KeyLabelX = -17,
+        KeyLabelY = 18,
+        KeyLabelFontSize = 7.2,
+        MakersLabelX = -17,
+        MakersLabelY = -15,
+        RiskMode = false,
+        InnerRing = true,
+        SubIndicatorCount = 1,
+        SubIndicatorLength = 3.3,
+        PointerLengthAdjust = -10,
+        PointerTailLengthAdjust = -1,
+        Pointercolour = "#FF0000"
+    };
+
+    static DialOptions tempOptions = new DialOptions(){
+        DialRange = 2000,
+        AdditionalRotation = 45,
+        ReverseMode = true,
+        SubIndicatorCount = 3,
+        MakersLabelX = -19,
+        KeyLabel = "Celcius",
+        KeyLabelX = -19.5,
+        KeyLabelY = 20,
+        KeyLabelFontSize = 5.6,
+        DialColour = "white",
+        FaceColour = "black",
+        Pointercolour = "#OO1EFF",
+        BossColour = "black",
+        BossCenterColour = "white",
+        InnerRing = true,
+        SmithsMode = true,
+        RiskMode = true,
+        RiskAdditionalRotation = 72,
+        RiskAngle = 54,
+        RiskColour = "#DD9898",
+        ResetPointerMode = true
+    };
+
+    static DialOptions voltOptions = new DialOptions(){
+        FaceArcAngle = 130,
+        IndicatorCount = 5,
+        SubIndicatorCount = 0,
+        RiskMode = false,
+        Pointercolour = "white",
+        RimColour = "white",
+        FaceRadius = 38,
+        MakersLabel = "blazor vintage kit",
+        MakersLabelY = 14
+    };
 
 
-
+    private List<OptionsWrapper> optionsList = [
+        new OptionsWrapper (){dialOptions = options},
+    new OptionsWrapper (){dialOptions = boostOptions }, 
+    new OptionsWrapper (){dialOptions = ampsOptions },
+    new OptionsWrapper (){dialOptions = tempOptions }, 
+    new OptionsWrapper (){dialOptions = voltOptions }];
 
     //animation
     private bool isAnimating;
@@ -236,38 +337,47 @@
         }
     }
 
-    private int targetValue = 0;
-    private int speed = 10;
+    // private int targetValue = 0;
+    // private int speed = 10;
     private Random random = new Random();
     private void PerformAnimationStep()
     {
-
-        double maxspeed = (options.DialRange/100)*10;
-        double minspeed = (options.DialRange/100)*3;
-
-        if (options.DialValue > options.DialRange) 
+        foreach(OptionsWrapper o in optionsList)
         {
-            options.DialValue = 0;
-            targetValue = options.DialRange / 2;
+            double maxspeed = (o.dialOptions.DialRange/100)*10;
+            double minspeed = (o.dialOptions.DialRange/100)*3;
+
+            if (o.dialOptions.DialValue > o.dialOptions.DialRange) 
+            {
+                o.dialOptions.DialValue = 0;
+                o.targetValue = o.dialOptions.DialRange / 2;
+            }
+
+            bool isWithinRange = Math.Abs(o.dialOptions.DialValue - o.targetValue) <= o.speed;
+            if (isWithinRange)
+            {
+                o.targetValue = random.Next(0, o.dialOptions.DialRange);
+
+                o.speed = random.Next((int)minspeed, (int)maxspeed);
+            }
+
+            if (o.dialOptions.DialValue > o.targetValue)
+            {
+                o.dialOptions.DialValue -= o.speed;
+            }
+            else if (o.dialOptions.DialValue < o.targetValue)
+            {
+                o.dialOptions.DialValue += o.speed;
+            }
         }
 
-        bool isWithinRange = Math.Abs(options.DialValue - targetValue) <= speed;
-        if (isWithinRange)
-        {
-            targetValue = random.Next(0, options.DialRange);
-
-            speed = random.Next((int)minspeed, (int)maxspeed);
-        }
-
-        if (options.DialValue > targetValue)
-        {
-            options.DialValue -= speed;
-        }
-        else if (options.DialValue < targetValue)
-        {
-            options.DialValue += speed;
-        }
         StateHasChanged();
     }
 
+
+    class OptionsWrapper{
+        public DialOptions dialOptions;
+        public int speed = 10;
+        public int targetValue = 0;
+    }
 }

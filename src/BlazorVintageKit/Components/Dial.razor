@@ -1,6 +1,4 @@
-﻿<div class="dial-container">
-
-    <svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
+﻿    <svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
 
 
         <!--Outer dial perimeter-->
@@ -125,7 +123,6 @@
 
     </svg>
 
-</div>
 
 @code {
     [Parameter] public DialOptions Options { get; set; } = new DialOptions();
@@ -135,7 +132,7 @@
     private double perMarkerAngle;
     private double totalIndicatorCount;
     private int charRotation = 0;
-    private int indicatorRange => Options.DialRange / Options.IndicatorCount;
+    private int indicatorRange => Options.DialRange == 0 ? 1 : Options.DialRange / Options.IndicatorCount;
     private (double,double) segmentArc;
     private double riskRotate;
 
