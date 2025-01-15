@@ -54,16 +54,32 @@
             @{
 
                 var angleoffset = (rotate*-1) + charRotation;
-
                 var textoffset = (Options.FaceRadius-10)*-1;
-                for (int i = 0; i <= Options.IndicatorCount; i++)
+                if (Options.ReverseMode)
                 {
-                    var angle = angleoffset - i * (Options.FaceArcAngle/Options.IndicatorCount); // Adjust the angle calculation
-                    var radians = angle * Math.PI / 180; // Convert angle to radians
-                    var x = textoffset * Math.Sin(radians); // Calculate x position
-                    var y = textoffset * Math.Cos(radians); // Calculate y position
+                    for (int i = 0; i <= Options.IndicatorCount; i++)
+                    {
+                        var angle = angleoffset - i * (Options.FaceArcAngle / Options.IndicatorCount); // Adjust the angle calculation
+                        var radians = angle * Math.PI / 180; // Convert angle to radians
+                        var x = textoffset * Math.Sin(radians); // Calculate x position
+                        var y = textoffset * Math.Cos(radians); // Calculate y position
 
-                    <text><text x="@x" y="@y" style="cursor:default;" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
+                        int k = Options.IndicatorCount - i;
+
+                        <text><text x="@x" y="@y" style="cursor:default;" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((k * indicatorRange / 100).ToString())</text></text>
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i <= Options.IndicatorCount; i++)
+                    {
+                        var angle = angleoffset - i * (Options.FaceArcAngle / Options.IndicatorCount); // Adjust the angle calculation
+                        var radians = angle * Math.PI / 180; // Convert angle to radians
+                        var x = textoffset * Math.Sin(radians); // Calculate x position
+                        var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                        <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
+                    }
                 }
             }
         </g>
@@ -89,20 +105,20 @@
             }
             else
             {
-                <polygon points="49.5,8 50.5,8 51,65 49,65" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
+                <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
             }
 
         </g>
 
         <!--center-->
-        <circle cx="50" cy="50" r="3" stroke-width="2" fill="@Options.FaceColour" />
-        <circle cx="50" cy="50" r="1" stroke-width="2" fill="@Options.DialColour" />
+        <circle cx="50" cy="50" r="3" stroke-width="2" fill="@Options.BossColour" />
+        <circle cx="50" cy="50" r="1" stroke-width="2" fill="@Options.BossCenterColour" />
 
 
         <!-- Text -->
         <g transform="translate(50, 50)">
-            <text x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="5" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="Courier, monospace">@Options.MakersLabel</text>
-            <text x="@Options.KeyLabelX" y="@Options.KeyLabelY" font-size="5" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;">@Options.KeyLabel</text>
+            <text x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="@Options.MakersLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.MakersLabelFont">@Options.MakersLabel</text>
+            <text x="@Options.KeyLabelX" y="@Options.KeyLabelY" font-size="@Options.KeyLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.KeyLabelFont">@Options.KeyLabel</text>
         </g>
 
     </svg>
@@ -121,9 +137,9 @@
     private (double,double) segmentArc;
     private double riskRotate;
 
-    private float pointerAngle = 0;
-    private float maxPointerAngle = 0;
-    private float pointerAnglePerIncrement = 0;
+    private double pointerAngle = 0;
+    private double maxPointerAngle = 0;
+    private double pointerAnglePerIncrement = 0;
 
     private ArcV arcV;
     private ArcV smithsArcV;
@@ -165,9 +181,24 @@
     private void CalcBarValue()
     {
 
-        pointerAngle = Options.DialValue * pointerAnglePerIncrement;
+        if(Options.ReverseMode)
+        {
+            var o = Options.FaceArcAngle;
 
-        if (pointerAngle > maxPointerAngle) maxPointerAngle = pointerAngle;
+            var j = Options.DialValue * pointerAnglePerIncrement;
+
+            pointerAngle = o - j;
+            if (pointerAngle < maxPointerAngle) maxPointerAngle = pointerAngle;
+        }
+        else
+        {
+            pointerAngle = Options.DialValue * pointerAnglePerIncrement;
+            if (pointerAngle > maxPointerAngle) maxPointerAngle = pointerAngle;
+        }
+
+
+
+
     }
 
     private static double CalcRotation(double arcAngle, int offsetRotation)
@@ -224,6 +255,8 @@
         public string Pointercolour { get; set; }  = "#FFFF00";
         public string ResetPointercolour { get; set; }  = "#FF0000";
         public string ResetButtonColour { get; set; }  = "#2E2E2E";
+        public string BossColour { get; set; } = "#FFFFFF";
+        public string BossCenterColour { get; set; } = "#000000";
         public double RimWidth { get; set; } = 2;
 
         public int IndicatorCount {get;set;} = 10;
@@ -233,6 +266,7 @@
         public int LabelYOffset {get;set;} = 2;
         public int LabelTextRotation {get;set;} = 0;
         public double LabelFontSize {get;set;} = 5;
+        public string LabelFont { get; set; } = "Courier, monospace";
 
         public bool RiskMode { get; set; } = true;
         public int RiskAdditionalRotation { get; set; }
@@ -242,13 +276,21 @@
         public bool SmithsMode { get; set; }
         public bool ResetPointerMode { get; set; }
         public bool AlternatePointer { get; set; }
+        public bool ReverseMode { get; set; }
 
         public string MakersLabel { get; set; } = "B.V.K.";
+        public string MakersLabelFont { get; set; } = "Courier, monospace";
+        public double MakersLabelFontSize {get;set;} = 5;
         public string KeyLabel { get; set; } = "RPM x 100";
+        public string KeyLabelFont { get; set; } = "Courier, monospace";
+        public double KeyLabelFontSize {get;set;} = 5;
         public int KeyLabelX { get; set; } = 0;
         public int KeyLabelY { get; set; } = 25;
         public int MakersLabelX { get; set; } = 0;
         public int MakersLabelY { get; set; } = 10;
+
+        public double PointerLengthAdjust { get; set; } = 0;
+        public double PointerTailLengthAdjust { get; set; } = 0;
     }
 
     public class ArcV

@@ -13,7 +13,7 @@
         <div class="form-group">
         <div style="margin-left:10px;">
             <label for="DialValue" class="form-label">DialValue:</label>
-            <input type="number" @bind="options.DialValue" @bind:event="oninput" class="form-control" id="DialValue" step="50" style="min-width:6ch;" />
+            <input type="number" @bind="options.DialValue" @bind:event="oninput" class="form-control" min="0" max="@options.DialRange" id="DialValue" step="50" style="min-width:6ch;" />
         </div>
         <div style="margin-left:10px;">
             <label for="DialRange" class="form-label">DialRange:</label>
@@ -51,9 +51,14 @@
             <input type="color" @bind="options.RiskColour" @bind:event="oninput" class="form-control" id="RiskColour"/>
         </div>
         <div style="margin-left:10px;">
-            <label for="LabelFontSize" class="form-label">LabelFontSize:</label>
-            <input type="number" @bind="options.LabelFontSize" @bind:event="oninput" class="form-control" id="LabelFontSize" step="0.1" style="min-width:6ch;" />
+            <label for="BossColour" class="form-label">BossColour:</label>
+            <input type="color" @bind="options.BossColour" @bind:event="oninput" class="form-control" id="BossColour"/>
         </div>
+        <div style="margin-left:10px;">
+            <label for="BossCenterColour" class="form-label">BossCenterColour:</label>
+            <input type="color" @bind="options.BossCenterColour" @bind:event="oninput" class="form-control" id="BossCenterColour"/>
+        </div>
+        
     </div>
 
     <div class="form-group">
@@ -78,6 +83,10 @@
             <input type="number" @bind="options.DialRadius" @bind:event="oninput" class="form-control" id="dialradius" step="1" style="min-width:6ch;" />
         </div>
         <div style="margin-left:10px;">
+            <label for="faceradius" class="form-label">FaceRadius:</label>
+            <input type="number" @bind="options.FaceRadius" @bind:event="oninput" class="form-control" id="faceradius" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
             <label for="rimwidth" class="form-label">RimWidth:</label>
             <input type="number" @bind="options.RimWidth" @bind:event="oninput" class="form-control" id="rimwidth" step="0.1" style="min-width:6ch;" />
         </div>
@@ -88,10 +97,7 @@
             <label for="facearcangle" class="form-label">FaceArcAngle:</label>
             <input type="number" @bind="options.FaceArcAngle" @bind:event="oninput" class="form-control" id="facearcangle" step="1" style="min-width:6ch;" />
         </div>
-        <div style="margin-left:10px;">
-            <label for="faceradius" class="form-label">FaceRadius:</label>
-            <input type="number" @bind="options.FaceRadius" @bind:event="oninput" class="form-control" id="faceradius" step="1" style="min-width:6ch;" />
-        </div>
+
         <div style="margin-left:10px;">
             <label for="AdditionalRotation" class="form-label">AdditionalRotation:</label>
             <input type="number" @bind="options.AdditionalRotation" @bind:event="oninput" class="form-control" id="AdditionalRotation" step="1" style="min-width:6ch;" />
@@ -127,6 +133,10 @@
         <label>
             <input type="checkbox" @bind="options.AlternatePointer" />
         </label>
+        <label for="ReverseMode" class="form-label">ReverseMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.ReverseMode" />
+        </label>
     </div>
 
     <div class="form-group">
@@ -141,6 +151,14 @@
         <div style="margin-left:10px;">
             <label for="MakersLabelY" class="form-label">MakersLabelY:</label>
             <input type="number" @bind="options.MakersLabelY" @bind:event="oninput" class="form-control" id="MakersLabelY" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="MakersLabelFont" class="form-label">MakersLabelFont:</label>
+            <input type="text" @bind="options.MakersLabelFont" @bind:event="oninput" class="form-control" id="MakersLabelFont" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="MakersLabelFontSize" class="form-label">MakersLabelFontSize:</label>
+            <input type="number" @bind="options.MakersLabelFontSize" @bind:event="oninput" class="form-control" id="MakersLabelFontSize" step="0.1" style="min-width:6ch;" />
         </div>
     </div>
 
@@ -157,7 +175,41 @@
             <label for="KeyLabelY" class="form-label">KeyLabelY:</label>
             <input type="number" @bind="options.KeyLabelY" @bind:event="oninput" class="form-control" id="KeyLabelY" step="1" style="min-width:6ch;" />
         </div>
+        <div style="margin-left:10px;">
+            <label for="KeyLabelFont" class="form-label">KeyLabelFont:</label>
+            <input type="text" @bind="options.KeyLabelFont" @bind:event="oninput" class="form-control" id="KeyLabelFont" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="KeyLabelFontSize" class="form-label">KeyLabelFontSize:</label>
+            <input type="number" @bind="options.KeyLabelFontSize" @bind:event="oninput" class="form-control" id="KeyLabelFontSize" step="0.1" style="min-width:6ch;" />
+        </div>
     </div>
+
+
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="LabelFont" class="form-label">LabelFont:</label>
+            <input type="text" @bind="options.LabelFont" @bind:event="oninput" class="form-control" id="LabelFont" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="LabelFontSize" class="form-label">LabelFontSize:</label>
+            <input type="number" @bind="options.LabelFontSize" @bind:event="oninput" class="form-control" id="LabelFontSize" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="PointerLengthAdjust" class="form-label">PointerLengthAdjust:</label>
+            <input type="number" @bind="options.PointerLengthAdjust" @bind:event="oninput" class="form-control" id="PointerLengthAdjust" step="0.1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="PointerTailLengthAdjust" class="form-label">PointerTailLengthAdjust:</label>
+            <input type="number" @bind="options.PointerTailLengthAdjust" @bind:event="oninput" class="form-control" id="PointerTailLengthAdjust" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
 </div>
 
 @code{
