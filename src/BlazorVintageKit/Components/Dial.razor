@@ -50,7 +50,7 @@
     <g transform="translate(50, @(50+Options.LabelYOffset))">
         @{
             var angleoffset = (rotate*-1) + charRotation;
-            var textoffset = (Options.FaceRadius-10)*-1;
+            var textoffset = (Options.FaceRadius-10+Options.AdditionalLabelRadius)*-1;
 
             if (Options.ReverseMode)
             {

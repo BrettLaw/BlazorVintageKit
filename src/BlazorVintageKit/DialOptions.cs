@@ -229,12 +229,16 @@ namespace BlazorVintageKit
         public bool RimPointerMode { get; set; }  //pointer emerges from the dial ring
 
 
-        //Static pointer - moving dial.
-        //public bool RobMode { get; set; }
-
-
+        
+        /// <summary>
+        /// Sets an additional radius to the label text. When used with FaceRadius allows text to be placed outside the indicators. Default is 0.
+        /// </summary>
+        public double AdditionalLabelRadius { get; set; } = 0;
 
         //someway to put the labels outside of the markers?
+
+        //Static pointer - moving dial.
+        //public bool RobMode { get; set; }
 
     }
 }
