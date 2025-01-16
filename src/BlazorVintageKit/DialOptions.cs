@@ -39,49 +39,49 @@ namespace BlazorVintageKit
         public int AdditionalRotation { get; set; }
 
         /// <summary>
-        /// The background colour of the dial. Specify a hexcode or colour name. Default is black.
+        /// The background colour of the dial. Specify a hexcode. Default is #000000.
         /// </summary>
-        public string DialColour { get; set; } = "black";
+        public string DialColour { get; set; } = "#000000";
 
         /// <summary>
-        /// The colour of the dial rim. Specify a hexcode or colour name. Default is #666666.
+        /// The colour of the dial rim. Specify a hexcode. Default is #666666.
         /// </summary>
         public string RimColour { get; set; } = "#666666";
 
         /// <summary>
-        /// The colour of the face markings. Specify a hexcode or colour name. Default is white.
+        /// The colour of the face markings. Specify a hexcode. Default is #FFFFFF.
         /// </summary>
-        public string FaceColour { get; set; } = "white";
+        public string FaceColour { get; set; } = "#FFFFFF";
 
         /// <summary>
-        /// The colour of the risk segment. Specify a hexcode or colour name. Default is #BF1818.
+        /// The colour of the risk segment. Specify a hexcode. Default is #BF1818.
         /// </summary>
         public string RiskColour { get; set; } = "#BF1818";
 
         /// <summary>
-        /// The colour of the pointer. Specify a hexcode or colour name. Default is #FFFF00.
+        /// The colour of the pointer. Specify a hexcode. Default is #FFFF00.
         /// </summary>
         public string Pointercolour { get; set; } = "#FFFF00";
 
         /// <summary>
-        /// The colour of the reset pointer. Specify a hexcode or colour name. Default is #FF0000.
+        /// The colour of the reset pointer. Specify a hexcode. Default is #FF0000.
         /// </summary>
         public string ResetPointercolour { get; set; } = "#FF0000";
 
         /// <summary>
-        /// The colour of the reset button. Specify a hexcode or colour name. Default is #2E2E2E.
+        /// The colour of the reset button. Specify a hexcode. Default is #2E2E2E.
         /// </summary>
         public string ResetButtonColour { get; set; } = "#2E2E2E";
 
         /// <summary>
-        /// The colour of the outer boss. Specify a hexcode or colour name. Default is #FFFF00.
+        /// The colour of the outer boss. Specify a hexcode. Default is #FFFF00.
         /// </summary>
         public string BossColour { get; set; } = "#FFFF00";
 
         /// <summary>
-        /// The colour of the boss center. Specify a hexcode or colour name. Default is black.
+        /// The colour of the boss center. Specify a hexcode. Default is #000000.
         /// </summary>
-        public string BossCenterColour { get; set; } = "black";
+        public string BossCenterColour { get; set; } = "#000000";
 
         /// <summary>
         /// The width of the rim relative to the SVG viewbox. Default is 2
@@ -119,9 +119,9 @@ namespace BlazorVintageKit
         public double LabelFontSize { get; set; } = 5;
 
         /// <summary>
-        /// Font name string for label text. Default is "Courier, monospace"
+        /// Font name string for label text. Default is ""
         /// </summary>
-        public string LabelFont { get; set; } = "Courier, monospace";
+        public string LabelFont { get; set; } = "";
 
         /// <summary>
         /// Flag that indicates whether the risk segment should be drawn. Default is true.
@@ -163,20 +163,78 @@ namespace BlazorVintageKit
         /// </summary>
         public bool ReverseMode { get; set; }
 
-        //public bool RobMode { get; set; }
-
+        /// <summary>
+        /// Text to show as a Makers label. Default is "B.V.K."
+        /// </summary>
         public string MakersLabel { get; set; } = "B.V.K.";
+
+        /// <summary>
+        /// Font name for the Makers label. Default is "Courier, monospace".
+        /// </summary>
         public string MakersLabelFont { get; set; } = "Courier, monospace";
+
+        /// <summary>
+        /// Font size for makers label text. Default is 5.
+        /// </summary>
         public double MakersLabelFontSize { get; set; } = 5;
-        public string KeyLabel { get; set; } = "RPM x 100";
-        public string KeyLabelFont { get; set; } = "Courier, monospace";
-        public double KeyLabelFontSize { get; set; } = 5;
-        public double KeyLabelX { get; set; } = 0;
-        public double KeyLabelY { get; set; } = 25;
+
+        /// <summary>
+        /// X position of the Makers label relative to the SVG view box. Default is 0.
+        /// </summary>
         public double MakersLabelX { get; set; } = 0;
+
+        /// <summary>
+        /// Y position relative of the Makers label relative to the SVG view box. Default is 10.
+        /// </summary>
         public double MakersLabelY { get; set; } = 10;
 
+        /// <summary>
+        /// Text to show as a Key label. Default is "Key Label"
+        /// </summary>
+        public string KeyLabel { get; set; } = "Key Label";
+
+        /// <summary>
+        /// Font name for the Key label. Default is "Courier, monospace".
+        /// </summary>
+        public string KeyLabelFont { get; set; } = "Courier, monospace";
+
+        /// <summary>
+        /// Font size for Key label text. Default is 5.
+        /// </summary>
+        public double KeyLabelFontSize { get; set; } = 5;
+
+        /// <summary>
+        /// X position of the Key label relative to the SVG view box. Default is 0.
+        /// </summary>
+        public double KeyLabelX { get; set; } = 0;
+
+        /// <summary>
+        /// Y position relative of the Key label relative to the SVG view box. Default is 25.
+        /// </summary>
+        public double KeyLabelY { get; set; } = 25;
+
+        /// <summary>
+        /// Adjustment to apply to the Pointer length. Default is 0.
+        /// </summary>
         public double PointerLengthAdjust { get; set; } = 0;
+
+        /// <summary>
+        /// Adjustment to apply to the Pointer tail length. Default is 0.
+        /// </summary>
         public double PointerTailLengthAdjust { get; set; } = 0;
+
+        /// <summary>
+        /// Flag that indicates an outside pointer (emerges from the rim) should be used.
+        /// </summary>
+        public bool RimPointerMode { get; set; }  //pointer emerges from the dial ring
+
+
+        //Static pointer - moving dial.
+        //public bool RobMode { get; set; }
+
+
+
+        //someway to put the labels outside of the markers?
+
     }
 }

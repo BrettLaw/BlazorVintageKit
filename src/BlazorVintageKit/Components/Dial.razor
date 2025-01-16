@@ -12,8 +12,7 @@
         </g>
     }
 
-    <!-- Circle edge colour -->
-    <circle cx="50" cy="50" r="@Options.DialRadius" stroke="@Options.RimColour" stroke-width="@Options.RimWidth" fill="none" /> 
+
 
 
     @if (Options.InnerRing)
@@ -103,6 +102,10 @@
             {
                 <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
             }
+            else if(Options.RimPointerMode)
+            {
+                <polygon points="50,@((Options.FaceRadius*-1)+55) 52,@((Options.FaceRadius*-1)+47) 50.5,@((Options.FaceRadius*-1)+47) 50.5,@((Options.FaceRadius*-1)+45) 49.5,@((Options.FaceRadius*-1)+45) 49.5,@((Options.FaceRadius*-1)+47) 48,@((Options.FaceRadius*-1)+47)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
+            }
             else
             {
                 <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
@@ -112,7 +115,7 @@
     </g>
 
     <!--center-->
-    @if (!Options.AlternatePointer)
+    @if (!Options.AlternatePointer && !Options.RimPointerMode)
     {
         <circle cx="50" cy="50" r="3" stroke-width="2" fill="@Options.BossColour" />
         <circle cx="50" cy="50" r="1" stroke-width="2" fill="@Options.BossCenterColour" />
@@ -123,6 +126,9 @@
         <text x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="@Options.MakersLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.MakersLabelFont">@Options.MakersLabel</text>
         <text x="@Options.KeyLabelX" y="@Options.KeyLabelY" font-size="@Options.KeyLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.KeyLabelFont">@Options.KeyLabel</text>
     </g>
+
+    <!-- Dial rim -->
+    <circle cx="50" cy="50" r="@Options.DialRadius" stroke="@Options.RimColour" stroke-width="@Options.RimWidth" fill="none" /> 
 
 </svg>
 
