@@ -8,7 +8,8 @@
     {
         if(Options.ScalesMode)
         {
-            <g transform="translate(50, 50) rotate(@((riskRotate + pointerAngle)*-1))">
+            var r = (riskRotate + pointerAngle) * -1;
+            <g transform="translate(50, 50) rotate(@r)">
                 <path d="M 0 0 L @Options.DialRadius 0 A @Options.DialRadius @Options.DialRadius 0 0 1 @segmentArc.Item1 @segmentArc.Item2 Z" fill="@Options.RiskColour" />
             </g>
         }
@@ -30,7 +31,8 @@
     {
         if(Options.ScalesMode)
         {
-            <g transform="translate(50, 50) rotate(@(((rotate + pointerAngle)*-1)))">
+            var r = (rotate + pointerAngle) * -1;
+            <g transform="translate(50, 50) rotate(@r)">
                 <path d="M 0 -@Options.FaceRadius A @Options.FaceRadius @Options.FaceRadius 0 @arcV.LargeArcFlag @arcV.SweepFlag @arcV.X @arcV.Y" fill="none" stroke="@Options.FaceColour" />
             </g>
         }
@@ -45,7 +47,8 @@
     {
         if(Options.ScalesMode)
         {
-            <g transform="translate(50, 50) rotate(@(((rotate + pointerAngle)*-1)))">
+            var r = (rotate + pointerAngle) * -1;
+            <g transform="translate(50, 50) rotate(@r)">
                 <path d="M 0 -@(Options.FaceRadius-5) A @(Options.FaceRadius-5) @(Options.FaceRadius-5) 0 @smithsArcV.LargeArcFlag @smithsArcV.SweepFlag @smithsArcV.X @smithsArcV.Y" fill="none" stroke="@Options.FaceColour" />
             </g>
         }
@@ -60,17 +63,26 @@
     <!-- combined dial marks-->
     @if(Options.ScalesMode)
     {
-        <g transform="translate(50, 50) rotate(@(rotate+(pointerAngle*-1)))">
-            @for (int i = 0; i <= ((Options.IndicatorCount-1) * (Options.SubIndicatorCount + 1)); i++)
+        var r = rotate + (pointerAngle * -1);
+        var loopCount = (Options.IndicatorCount - 1) * (Options.SubIndicatorCount + 1);
+        <g transform="translate(50, 50) rotate(@r)">
+
+            @{
+                var largeMarkY1 = (Options.FaceRadius-5)*-1;
+                var smallMarkY1 = (Options.FaceRadius - Options.SubIndicatorLength) * -1;
+                var markY2 = Options.FaceRadius*-1;
+            }
+
+            @for (int i = 0; i <= loopCount; i++)
             {
                 var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
                 if (i % (Options.SubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
                 {
-                    <line x1="0" y1="@((Options.FaceRadius-5)*-1)" x2="0" y2="@(Options.FaceRadius*-1)" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
+                    <line x1="0" y1="@largeMarkY1" x2="0" y2="@markY2" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
                 }
                 else // Small marks
                 {
-                    <line x1="0" y1="@((Options.FaceRadius-Options.SubIndicatorLength)*-1)" x2="0" y2="@((Options.FaceRadius)*-1)" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
+                    <line x1="0" y1="@smallMarkY1" x2="0" y2="@markY2" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
                 }
             }
         </g>
@@ -78,16 +90,23 @@
     else
     {
         <g transform="translate(50, 50) rotate(@rotate)">
-            @for (int i = 0; i <= ((Options.IndicatorCount-1) * (Options.SubIndicatorCount + 1)); i++)
+            @{
+                var loopCount = (Options.IndicatorCount-1) * (Options.SubIndicatorCount + 1);
+            }
+            @for (int i = 0; i <= loopCount; i++)
             {
-                var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
-                if (i % (Options.SubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
+                var anglePerMark = i * perMarkerAngle;
+                if (i % (Options.SubIndicatorCount + 1) == 0) // Every nth mark is a large mark
                 {
-                    <line x1="0" y1="@((Options.FaceRadius-5)*-1)" x2="0" y2="@(Options.FaceRadius*-1)" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
+                    var y1 = (Options.FaceRadius - 5) * -1;
+                    var y2 = Options.FaceRadius * -1;
+                    <line transform="rotate(@anglePerMark)" x1="0" y1="@y1" x2="0" y2="@y2" stroke="@Options.FaceColour" stroke-width="0.5" />
                 }
                 else // Small marks
                 {
-                    <line x1="0" y1="@((Options.FaceRadius-Options.SubIndicatorLength)*-1)" x2="0" y2="@((Options.FaceRadius)*-1)" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
+                    var y1 = (Options.FaceRadius - Options.SubIndicatorLength) * -1;
+                    var y2 = (Options.FaceRadius) * -1;
+                    <line transform="rotate(@anglePerMark)" x1="0" y1="@y1" x2="0" y2="@y2" stroke="@Options.FaceColour" stroke-width="0.2" />
                 }
             }
         </g>
@@ -310,7 +329,8 @@
 
     private void UpdateValues()
     {
-        smithsArcV = CalculateArcDetails(Options.FaceRadius-5, Options.FaceArcAngle);
+        if(Options.SmithsMode) smithsArcV = CalculateArcDetails(Options.FaceRadius-5, Options.FaceArcAngle);
+
         arcV = CalculateArcDetails(Options.FaceRadius, Options.FaceArcAngle);
 
         rotate = CalcRotation(Options.FaceArcAngle, Options.AdditionalRotation);
@@ -386,7 +406,5 @@
 
         return (x, y);
     }
-
-
 
 }
