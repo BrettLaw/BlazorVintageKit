@@ -249,5 +249,7 @@ namespace BlazorVintageKit
         public bool InnerCircleMode { get; set; } = false;
         public double InnerCircleRadius { get; set; } = 20;
         public string InnerCircleColour { get; set; } = "#222222";
+
+        public int ValueDivisor { get; set; } = 100;
     }
 }
