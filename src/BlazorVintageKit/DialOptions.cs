@@ -61,7 +61,7 @@ namespace BlazorVintageKit
         /// <summary>
         /// The colour of the pointer. Specify a hexcode. Default is #FFFF00.
         /// </summary>
-        public string Pointercolour { get; set; } = "#FFFF00";
+        public string PointerColour { get; set; } = "#FFFF00";
 
         /// <summary>
         /// The colour of the reset pointer. Specify a hexcode. Default is #FF0000.
