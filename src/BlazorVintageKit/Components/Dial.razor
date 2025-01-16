@@ -59,139 +59,146 @@
             </g>
         }
     }
+    @if(showIndicators){
+        <!-- combined dial marks-->
+        @if(Options.ScalesMode)
+        {
+            var r = rotate + (pointerAngle * -1);
+            var loopCount = (Options.IndicatorCount - 1) * (lastSubIndicatorCount + 1);
+            <g transform="translate(50, 50) rotate(@r)">
 
-    <!-- combined dial marks-->
-    @if(Options.ScalesMode)
-    {
-        var r = rotate + (pointerAngle * -1);
-        var loopCount = (Options.IndicatorCount - 1) * (Options.SubIndicatorCount + 1);
-        <g transform="translate(50, 50) rotate(@r)">
-
-            @{
-                var largeMarkY1 = (Options.FaceRadius-5)*-1;
-                var smallMarkY1 = (Options.FaceRadius - Options.SubIndicatorLength) * -1;
-                var markY2 = Options.FaceRadius*-1;
-            }
-
-            @for (int i = 0; i <= loopCount; i++)
-            {
-                var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
-                if (i % (Options.SubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
-                {
-                    <line x1="0" y1="@largeMarkY1" x2="0" y2="@markY2" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
-                }
-                else // Small marks
-                {
-                    <line x1="0" y1="@smallMarkY1" x2="0" y2="@markY2" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
-                }
-            }
-        </g>
-    }
-    else
-    {
-        <g transform="translate(50, 50) rotate(@rotate)">
-            @{
-                var loopCount = (Options.IndicatorCount-1) * (Options.SubIndicatorCount + 1);
-            }
-            @for (int i = 0; i <= loopCount; i++)
-            {
-                var anglePerMark = i * perMarkerAngle;
-                if (i % (Options.SubIndicatorCount + 1) == 0) // Every nth mark is a large mark
-                {
-                    var y1 = (Options.FaceRadius - 5) * -1;
-                    var y2 = Options.FaceRadius * -1;
-                    <line transform="rotate(@anglePerMark)" x1="0" y1="@y1" x2="0" y2="@y2" stroke="@Options.FaceColour" stroke-width="0.5" />
-                }
-                else // Small marks
-                {
-                    var y1 = (Options.FaceRadius - Options.SubIndicatorLength) * -1;
-                    var y2 = (Options.FaceRadius) * -1;
-                    <line transform="rotate(@anglePerMark)" x1="0" y1="@y1" x2="0" y2="@y2" stroke="@Options.FaceColour" stroke-width="0.2" />
-                }
-            }
-        </g>
-    }
-
-
-    <!-- text labels -->
-    @if(Options.ScalesMode)
-    {
-        <g transform="translate(50, 50) rotate(@(rotate))">
-            @{
-                var angleoffset = (pointerAngle) + charRotation;
-                var textoffset = (Options.FaceRadius-10+Options.AdditionalLabelRadius)*-1;
-
-                if(Options.ReverseMode)
-                {
-                    var r = (Options.FaceArcAngle / 2) + Options.LabelTextRotation - Options.AdditionalRotation;
-
-                    for (int i = 0; i <= (Options.IndicatorCount-1); i++)
+                @{
+                    var largeMarkY1 = (Options.FaceRadius-5)*-1;
+                    var smallMarkY1 = (Options.FaceRadius - Options.SubIndicatorLength) * -1;
+                    var markY2 = Options.FaceRadius*-1;
+                    for (int i = 0; i <= loopCount; i++)
                     {
-                        var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
-                        var radians = angle * Math.PI / 180; // Convert angle to radians
-                        var x = textoffset * Math.Sin(radians); // Calculate x position
-                        var y = textoffset * Math.Cos(radians); // Calculate y position
-
-                        int k = (Options.IndicatorCount-1) - i;
-
-                        <text><text transform="rotate(@((((angleoffset-pointerAngle)+angle)*-1)+r) @x @y)" x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont"  font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((k * indicatorRange / 100).ToString())</text></text>
+                        var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
+                        if (i % (lastSubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
+                        {
+                            <line x1="0" y1="@largeMarkY1" x2="0" y2="@markY2" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
+                        }
+                        else // Small marks
+                        {
+                            <line x1="0" y1="@smallMarkY1" x2="0" y2="@markY2" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
+                        }
                     }
                 }
-                else
-                {
-                    var r = (Options.FaceArcAngle / 2) + Options.LabelTextRotation  - Options.AdditionalRotation;
-
-                    for (int i = 0; i <= (Options.IndicatorCount-1); i++)
+            </g>
+        }
+        else
+        {
+            <g transform="translate(50, 50) rotate(@rotate)">
+                @{
+                    var loopCount = (Options.IndicatorCount-1) * (lastSubIndicatorCount + 1);
+                    for (int i = 0; i <= loopCount; i++)
                     {
-                        var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
-                        var radians = angle * Math.PI / 180; // Convert angle to radians
-                        var x = textoffset * Math.Sin(radians); // Calculate x position
-                        var y = textoffset * Math.Cos(radians); // Calculate y position
-
-                        <text><text transform="rotate(@((((angleoffset-pointerAngle)+angle)*-1)+r) @x @y)" x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont"  font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
+                        var anglePerMark = i * perMarkerAngle;
+                        if (i % (lastSubIndicatorCount + 1) == 0) // Every nth mark is a large mark
+                        {
+                            var y1 = (Options.FaceRadius - 5) * -1;
+                            var y2 = Options.FaceRadius * -1;
+                            <line transform="rotate(@anglePerMark)" x1="0" y1="@y1" x2="0" y2="@y2" stroke="@Options.FaceColour" stroke-width="0.5" />
+                        }
+                        else // Small marks
+                        {
+                            var y1 = (Options.FaceRadius - Options.SubIndicatorLength) * -1;
+                            var y2 = (Options.FaceRadius) * -1;
+                            <line transform="rotate(@anglePerMark)" x1="0" y1="@y1" x2="0" y2="@y2" stroke="@Options.FaceColour" stroke-width="0.2" />
+                        }
                     }
                 }
-            }
-        </g>
+            </g>
+        }
+
+
+        <!-- text labels -->
+
+        @if(Options.ScalesMode)
+        {
+            <g transform="translate(50, 50) rotate(@(rotate))">
+                @{
+                    var angleoffset = (pointerAngle) + charRotation;
+                    var textoffset = (Options.FaceRadius-10+Options.AdditionalLabelRadius)*-1;
+
+                    if(Options.ReverseMode)
+                    {
+                        var r = (Options.FaceArcAngle / 2) + Options.LabelTextRotation - Options.AdditionalRotation;
+                        var loopCount = Options.IndicatorCount - 1;
+                        var faceArc_IndicatorCount_Adjust = Options.FaceArcAngle / (Options.IndicatorCount - 1);
+                        for (int i = 0; i <= loopCount; i++)
+                        {
+                            var angle = angleoffset - i * faceArc_IndicatorCount_Adjust; // Adjust the angle calculation
+                            var radians = angle * PIover180; // Convert angle to radians
+                            var x = textoffset * Math.Sin(radians); // Calculate x position
+                            var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                            int k = loopCount - i;
+
+                            var tr = ((angleoffset - pointerAngle + angle) * -1) + r;
+                            var text = (k * indicatorRange / 100).ToString();
+                            <text><text transform="rotate(@tr @x @y)" x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@text</text></text>
+                        }
+                    }
+                    else
+                    {
+
+
+                        var r = (Options.FaceArcAngle / 2) + Options.LabelTextRotation  - Options.AdditionalRotation;
+                        var loopCount = Options.IndicatorCount - 1;
+                        var faceArc_IndicatorCount_Adjust = Options.FaceArcAngle / (Options.IndicatorCount - 1);
+                        for (int i = 0; i <= loopCount; i++)
+                        {
+                            var angle = angleoffset - i * faceArc_IndicatorCount_Adjust; // Adjust the angle calculation
+                            var radians = angle * PIover180; // Convert angle to radians
+                            var x = textoffset * Math.Sin(radians); // Calculate x position
+                            var y = textoffset * Math.Cos(radians); // Calculate y position
+                            var text = (i * indicatorRange / 100).ToString();
+                            <text><text transform="rotate(@((((angleoffset-pointerAngle)+angle)*-1)+r) @x @y)" x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont"  font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@text</text></text>
+                        }
+                    }
+                }
+            </g>
+        }
+        else
+        {
+            <g transform="translate(50, @(50+Options.LabelYOffset))">
+                @{
+                    var angleoffset = (rotate*-1) + charRotation;
+                    var textoffset = (Options.FaceRadius-10+Options.AdditionalLabelRadius)*-1;
+
+                    if (Options.ReverseMode)
+                    {
+
+                        var faceArc_IndicatorCount_Adjust = Options.FaceArcAngle / (Options.IndicatorCount - 1); 
+                        for (int i = 0; i <= (Options.IndicatorCount-1); i++)
+                        {
+                            var angle = angleoffset - i * (faceArc_IndicatorCount_Adjust); // Adjust the angle calculation
+                            var radians = angle * PIover180; // Convert angle to radians
+                            var x = textoffset * Math.Sin(radians); // Calculate x position
+                            var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                            int k = (Options.IndicatorCount-1) - i;
+                            var text = (k * indicatorRange / 100).ToString();
+                            <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@text</text></text>
+                        }
+                    }
+                    else
+                    {
+                        for (int i = 0; i <= (Options.IndicatorCount-1); i++)
+                        {
+                            var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
+                            var radians = angle * PIover180; // Convert angle to radians
+                            var x = textoffset * Math.Sin(radians); // Calculate x position
+                            var y = textoffset * Math.Cos(radians); // Calculate y position
+                            var text = (i * indicatorRange / 100).ToString();
+                            <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@text</text></text>
+                        }
+                    }
+                }
+            </g>
+        }
     }
-    else
-    {
-        <g transform="translate(50, @(50+Options.LabelYOffset))">
-            @{
-                var angleoffset = (rotate*-1) + charRotation;
-                var textoffset = (Options.FaceRadius-10+Options.AdditionalLabelRadius)*-1;
-
-                if (Options.ReverseMode)
-                {
-                    for (int i = 0; i <= (Options.IndicatorCount-1); i++)
-                    {
-                        var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
-                        var radians = angle * Math.PI / 180; // Convert angle to radians
-                        var x = textoffset * Math.Sin(radians); // Calculate x position
-                        var y = textoffset * Math.Cos(radians); // Calculate y position
-
-                        int k = (Options.IndicatorCount-1) - i;
-
-                        <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((k * indicatorRange / 100).ToString())</text></text>
-                    }
-                }
-                else
-                {
-                    for (int i = 0; i <= (Options.IndicatorCount-1); i++)
-                    {
-                        var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
-                        var radians = angle * Math.PI / 180; // Convert angle to radians
-                        var x = textoffset * Math.Sin(radians); // Calculate x position
-                        var y = textoffset * Math.Cos(radians); // Calculate y position
-
-                        <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
-                    }
-                }
-
-            }
-        </g>
-    }
-
     <!-- Text -->
     <g transform="translate(50, 50)">
         <text x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="@Options.MakersLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.MakersLabelFont">@Options.MakersLabel</text>
@@ -263,7 +270,6 @@
         }
         else
         {
-
             if(Options.AlternatePointer)
             {
                 <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
@@ -294,7 +300,6 @@
 @code {
     [Parameter] public DialOptions Options { get; set; } = new DialOptions();
 
-
     private double rotate = 0;
     private double perMarkerAngle;
     private double totalIndicatorCount;
@@ -309,6 +314,8 @@
 
     private SVGArc arcV;
     private SVGArc smithsArcV;
+
+    private const double PIover180 = Math.PI / 180;
 
     protected override void OnInitialized()
     {
@@ -327,29 +334,45 @@
         }
     }
 
+    private int lastIndicatorCount = 0;
+    private int lastSubIndicatorCount = 0;
+    private bool showIndicators = true;
     private void UpdateValues()
     {
         if(Options.SmithsMode) smithsArcV = CalculateArcDetails(Options.FaceRadius-5, Options.FaceArcAngle);
 
-        arcV = CalculateArcDetails(Options.FaceRadius, Options.FaceArcAngle);
+        if(Options.InnerRing) arcV = CalculateArcDetails(Options.FaceRadius, Options.FaceArcAngle);
 
         rotate = CalcRotation(Options.FaceArcAngle, Options.AdditionalRotation);
 
-        segmentArc = CalculateRiskEndpoint(Options.DialRadius, Options.RiskAngle);
+        if(Options.RiskMode) {
+            segmentArc = CalculateRiskEndpoint(Options.DialRadius, Options.RiskAngle);
+            riskRotate = Options.RiskAdditionalRotation + ((Options.RiskAdditionalRotation + 45 - Options.RiskAngle)) + Options.AdditionalRotation + ((Options.FaceArcAngle - 270) / 2);
+        }
 
-        totalIndicatorCount = ((Options.IndicatorCount-1) * (Options.SubIndicatorCount + 1));
-        perMarkerAngle = (Options.FaceArcAngle / totalIndicatorCount);
+        if(lastIndicatorCount != Options.IndicatorCount || lastSubIndicatorCount != Options.SubIndicatorCount)
+        {
+            lastIndicatorCount = Options.IndicatorCount >= 0 ? Options.IndicatorCount : 0;
+            lastSubIndicatorCount = Options.SubIndicatorCount >= 0 ? Options.SubIndicatorCount : 0;
 
-        pointerAnglePerIncrement = (float)Options.FaceArcAngle / Options.DialRange;
-
-        riskRotate = Options.RiskAdditionalRotation + ((Options.RiskAdditionalRotation + 45 - Options.RiskAngle)) + Options.AdditionalRotation + ((Options.FaceArcAngle - 270) / 2);
+            if (lastIndicatorCount < 2)
+            {
+                showIndicators = false;
+            }
+            else
+            {
+                showIndicators = true;
+                totalIndicatorCount = ((lastIndicatorCount - 1) * (lastSubIndicatorCount + 1));
+                perMarkerAngle = (Options.FaceArcAngle / totalIndicatorCount);
+                pointerAnglePerIncrement = (float)Options.FaceArcAngle / Options.DialRange;
+            }
+        }
 
         CalcBarValue();
     }
 
     private void Reset()
     {
-        Console.WriteLine("Reset");
         maxPointerAngle = pointerAngle;
     }
 
@@ -357,10 +380,9 @@
     {
         if(Options.ReverseMode)
         {
-            var o = Options.FaceArcAngle;
             var j = Options.DialValue * pointerAnglePerIncrement;
 
-            pointerAngle = o - j;
+            pointerAngle = Options.FaceArcAngle - j;
             if (pointerAngle < maxPointerAngle) maxPointerAngle = pointerAngle;
         }
         else
@@ -398,7 +420,7 @@
     static (double, double) CalculateArcEndpoint(double radius, double angleDegrees)
     {
         // Convert angle to radians
-        double angleRadians = angleDegrees * Math.PI / 180;
+        double angleRadians = angleDegrees * PIover180;
 
         // Calculate x and y coordinates of the endpoint
         double x = radius * Math.Sin(angleRadians);  // Sin for x
