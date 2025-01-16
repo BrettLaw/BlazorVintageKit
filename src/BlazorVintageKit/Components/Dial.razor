@@ -1,104 +1,251 @@
 ﻿<svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
 
-
     <!--Outer dial perimeter-->
     <circle cx="50" cy="50" r="@Options.DialRadius" fill="@Options.DialColour" />
 
+    <!-- Risk segment -->
     @if (Options.RiskMode)
     {
-        <!-- Risk segment -->
-        <g transform="translate(50, 50) rotate(@riskRotate)">
-            <path d="M 0 0 L @Options.DialRadius 0 A @Options.DialRadius @Options.DialRadius 0 0 1 @segmentArc.Item1 @segmentArc.Item2 Z" fill="@Options.RiskColour" />
-        </g>
+        if(Options.ScalesMode)
+        {
+            <g transform="translate(50, 50) rotate(@((riskRotate + pointerAngle)*-1))">
+                <path d="M 0 0 L @Options.DialRadius 0 A @Options.DialRadius @Options.DialRadius 0 0 1 @segmentArc.Item1 @segmentArc.Item2 Z" fill="@Options.RiskColour" />
+            </g>
+        }
+        else
+        {
+            <g transform="translate(50, 50) rotate(@riskRotate)">
+                <path d="M 0 0 L @Options.DialRadius 0 A @Options.DialRadius @Options.DialRadius 0 0 1 @segmentArc.Item1 @segmentArc.Item2 Z" fill="@Options.RiskColour" />
+            </g>
+        }
     }
 
-
-
+    <!--Inner Circle Mode-->
+    @if(Options.InnerCircleMode)
+    {
+        <circle cx="50" cy="50" r="@Options.InnerCircleRadius" fill="@Options.InnerCircleColour" />
+    }
 
     @if (Options.InnerRing)
     {
-        <g transform="translate(50, 50) rotate(@rotate)">
-            <path d="M 0 -@Options.FaceRadius A @Options.FaceRadius @Options.FaceRadius 0 @arcV.LargeArcFlag @arcV.SweepFlag @arcV.X @arcV.Y" fill="none" stroke="@Options.FaceColour" />
-        </g>
+        if(Options.ScalesMode)
+        {
+            <g transform="translate(50, 50) rotate(@(((rotate + pointerAngle)*-1)))">
+                <path d="M 0 -@Options.FaceRadius A @Options.FaceRadius @Options.FaceRadius 0 @arcV.LargeArcFlag @arcV.SweepFlag @arcV.X @arcV.Y" fill="none" stroke="@Options.FaceColour" />
+            </g>
+        }
+        else
+        {
+            <g transform="translate(50, 50) rotate(@rotate)">
+                <path d="M 0 -@Options.FaceRadius A @Options.FaceRadius @Options.FaceRadius 0 @arcV.LargeArcFlag @arcV.SweepFlag @arcV.X @arcV.Y" fill="none" stroke="@Options.FaceColour" />
+            </g>
+        }
     }
     @if (Options.SmithsMode)
     {
-        <g transform="translate(50, 50) rotate(@rotate)">
-
-            <path d="M 0 -@(Options.FaceRadius-5) A @(Options.FaceRadius-5) @(Options.FaceRadius-5) 0 @smithsArcV.LargeArcFlag @smithsArcV.SweepFlag @smithsArcV.X @smithsArcV.Y" fill="none" stroke="@Options.FaceColour" />
-
-        </g>
+        if(Options.ScalesMode)
+        {
+            <g transform="translate(50, 50) rotate(@(((rotate + pointerAngle)*-1)))">
+                <path d="M 0 -@(Options.FaceRadius-5) A @(Options.FaceRadius-5) @(Options.FaceRadius-5) 0 @smithsArcV.LargeArcFlag @smithsArcV.SweepFlag @smithsArcV.X @smithsArcV.Y" fill="none" stroke="@Options.FaceColour" />
+            </g>
+        }
+        else
+        {
+            <g transform="translate(50, 50) rotate(@rotate)">
+                <path d="M 0 -@(Options.FaceRadius-5) A @(Options.FaceRadius-5) @(Options.FaceRadius-5) 0 @smithsArcV.LargeArcFlag @smithsArcV.SweepFlag @smithsArcV.X @smithsArcV.Y" fill="none" stroke="@Options.FaceColour" />
+            </g>
+        }
     }
 
     <!-- combined dial marks-->
-    <g transform="translate(50, 50) rotate(@rotate)">
-        @for (int i = 0; i <= ((Options.IndicatorCount-1) * (Options.SubIndicatorCount + 1)); i++)
-        {
-            var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
-            if (i % (Options.SubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
+    @if(Options.ScalesMode)
+    {
+        <g transform="translate(50, 50) rotate(@(rotate+(pointerAngle*-1)))">
+            @for (int i = 0; i <= ((Options.IndicatorCount-1) * (Options.SubIndicatorCount + 1)); i++)
             {
-                <line x1="0" y1="@((Options.FaceRadius-5)*-1)" x2="0" y2="@(Options.FaceRadius*-1)" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
+                var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
+                if (i % (Options.SubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
+                {
+                    <line x1="0" y1="@((Options.FaceRadius-5)*-1)" x2="0" y2="@(Options.FaceRadius*-1)" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
+                }
+                else // Small marks
+                {
+                    <line x1="0" y1="@((Options.FaceRadius-Options.SubIndicatorLength)*-1)" x2="0" y2="@((Options.FaceRadius)*-1)" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
+                }
             }
-            else // Small marks
+        </g>
+    }
+    else
+    {
+        <g transform="translate(50, 50) rotate(@rotate)">
+            @for (int i = 0; i <= ((Options.IndicatorCount-1) * (Options.SubIndicatorCount + 1)); i++)
             {
-                <line x1="0" y1="@((Options.FaceRadius-Options.SubIndicatorLength)*-1)" x2="0" y2="@((Options.FaceRadius)*-1)" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
+                var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
+                if (i % (Options.SubIndicatorCount + 1) == 0) // Every 5th mark is a large mark
+                {
+                    <line x1="0" y1="@((Options.FaceRadius-5)*-1)" x2="0" y2="@(Options.FaceRadius*-1)" stroke="@Options.FaceColour" stroke-width="0.5" transform="rotate(@anglePerMark)" />
+                }
+                else // Small marks
+                {
+                    <line x1="0" y1="@((Options.FaceRadius-Options.SubIndicatorLength)*-1)" x2="0" y2="@((Options.FaceRadius)*-1)" stroke="@Options.FaceColour" stroke-width="0.2" transform="rotate(@anglePerMark)" />
+                }
             }
-        }
-    </g>
+        </g>
+    }
+
 
     <!-- text labels -->
-    <g transform="translate(50, @(50+Options.LabelYOffset))">
-        @{
-            var angleoffset = (rotate*-1) + charRotation;
-            var textoffset = (Options.FaceRadius-10+Options.AdditionalLabelRadius)*-1;
+    @if(Options.ScalesMode)
+    {
+        <g transform="translate(50, 50) rotate(@(rotate))">
+            @{
+                var angleoffset = (pointerAngle) + charRotation;
+                var textoffset = (Options.FaceRadius-10+Options.AdditionalLabelRadius)*-1;
 
-            if (Options.ReverseMode)
-            {
-                for (int i = 0; i <= (Options.IndicatorCount-1); i++)
+                if(Options.ReverseMode)
                 {
-                    var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
-                    var radians = angle * Math.PI / 180; // Convert angle to radians
-                    var x = textoffset * Math.Sin(radians); // Calculate x position
-                    var y = textoffset * Math.Cos(radians); // Calculate y position
+                    var r = (Options.FaceArcAngle / 2) + Options.LabelTextRotation - Options.AdditionalRotation;
 
-                    int k = (Options.IndicatorCount-1) - i;
+                    for (int i = 0; i <= (Options.IndicatorCount-1); i++)
+                    {
+                        var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
+                        var radians = angle * Math.PI / 180; // Convert angle to radians
+                        var x = textoffset * Math.Sin(radians); // Calculate x position
+                        var y = textoffset * Math.Cos(radians); // Calculate y position
 
-                    <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((k * indicatorRange / 100).ToString())</text></text>
+                        int k = (Options.IndicatorCount-1) - i;
+
+                        <text><text transform="rotate(@((((angleoffset-pointerAngle)+angle)*-1)+r) @x @y)" x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont"  font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((k * indicatorRange / 100).ToString())</text></text>
+                    }
                 }
+                else
+                {
+                    var r = (Options.FaceArcAngle / 2) + Options.LabelTextRotation  - Options.AdditionalRotation;
+
+                    for (int i = 0; i <= (Options.IndicatorCount-1); i++)
+                    {
+                        var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
+                        var radians = angle * Math.PI / 180; // Convert angle to radians
+                        var x = textoffset * Math.Sin(radians); // Calculate x position
+                        var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                        <text><text transform="rotate(@((((angleoffset-pointerAngle)+angle)*-1)+r) @x @y)" x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont"  font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
+                    }
+                }
+            }
+        </g>
+    }
+    else
+    {
+        <g transform="translate(50, @(50+Options.LabelYOffset))">
+            @{
+                var angleoffset = (rotate*-1) + charRotation;
+                var textoffset = (Options.FaceRadius-10+Options.AdditionalLabelRadius)*-1;
+
+                if (Options.ReverseMode)
+                {
+                    for (int i = 0; i <= (Options.IndicatorCount-1); i++)
+                    {
+                        var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
+                        var radians = angle * Math.PI / 180; // Convert angle to radians
+                        var x = textoffset * Math.Sin(radians); // Calculate x position
+                        var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                        int k = (Options.IndicatorCount-1) - i;
+
+                        <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((k * indicatorRange / 100).ToString())</text></text>
+                    }
+                }
+                else
+                {
+                    for (int i = 0; i <= (Options.IndicatorCount-1); i++)
+                    {
+                        var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
+                        var radians = angle * Math.PI / 180; // Convert angle to radians
+                        var x = textoffset * Math.Sin(radians); // Calculate x position
+                        var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                        <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
+                    }
+                }
+
+            }
+        </g>
+    }
+
+    <!-- Text -->
+    <g transform="translate(50, 50)">
+        <text x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="@Options.MakersLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.MakersLabelFont">@Options.MakersLabel</text>
+        <text x="@Options.KeyLabelX" y="@Options.KeyLabelY" font-size="@Options.KeyLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.KeyLabelFont">@Options.KeyLabel</text>
+    </g>
+
+    <!-- reset pointer -->
+    @if (Options.ResetPointerMode)
+    {
+        if(Options.ScalesMode)
+        {
+            <g transform="translate(50 50)">
+                <circle cx="@(Options.ResetButtonXOffset)" cy="@(10+Options.ResetButtonYOffset)" r="3" stroke-width="2" fill="@Options.ResetButtonColour" @onclick="Reset" style="cursor:pointer;"/>
+            </g>
+
+            if(Options.ReverseMode)
+            {
+                var x = maxPointerAngle - pointerAngle + (rotate);
+                <polygon transform="rotate(@x 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" id="pointer" />
             }
             else
             {
-                for (int i = 0; i <= (Options.IndicatorCount-1); i++)
-                {
-                    var angle = angleoffset - i * (Options.FaceArcAngle / (Options.IndicatorCount-1)); // Adjust the angle calculation
-                    var radians = angle * Math.PI / 180; // Convert angle to radians
-                    var x = textoffset * Math.Sin(radians); // Calculate x position
-                    var y = textoffset * Math.Cos(radians); // Calculate y position
-
-                    <text><text x="@x" y="@y" style="cursor:default;" font-family="@Options.LabelFont" transform="rotate(@Options.LabelTextRotation @x @(y-(Options.LabelFontSize)))" font-size="@(Options.LabelFontSize)px" text-anchor="middle" fill="@Options.FaceColour">@((i * indicatorRange / 100).ToString())</text></text>
-                }
+                var x = maxPointerAngle - pointerAngle + rotate;
+                <polygon transform="rotate(@x 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" id="pointer" />
             }
-            
         }
-    </g>
+        else
+        {
+            <!-- reset pointer reset button -->
+            <g transform="rotate(@Options.AdditionalRotation 50 50)">
+                <circle cx="50" cy="90" r="3" stroke-width="2" fill="@Options.ResetButtonColour" @onclick="Reset" style="cursor:pointer;"/>
+            </g>
 
-    @if (Options.ResetPointerMode)
-    {
-        <!-- reset pointer -->
-        <g transform="rotate(@rotate 50 50)">
-            <polygon points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" transform="rotate(@maxPointerAngle 50 50)" id="pointer" />
-        </g>
-        <g transform="rotate(@Options.AdditionalRotation 50 50)">
-            <circle cx="50" cy="90" r="3" stroke-width="2" fill="@Options.ResetButtonColour" @onclick="Reset" style="cursor:pointer;"/>
-        </g>
+            if(Options.ReverseMode)
+            {
+                var x = maxPointerAngle - pointerAngle + (rotate*-1);
+                <g transform="rotate(@rotate 50 50)">
+                    <polygon transform="rotate(@maxPointerAngle 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" id="pointer" />
+                </g>
+            }
+            else
+            {
+                <g transform="rotate(@rotate 50 50)">
+                    <polygon transform="rotate(@maxPointerAngle 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" id="pointer" />
+                </g>
+            }
+        }
     }
 
 
     <!-- pointer -->
     <g transform="rotate(@rotate 50 50)">
 
+        @if(Options.ScalesMode)
+        {
+            if(Options.AlternatePointer)
+            {
+                <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.Pointercolour" transform="rotate(0 50 50)" id="pointer" />
+            }
+            else if(Options.RimPointerMode)
+            {
+                var t = (Options.FaceRadius * -1) + Options.PointerLengthAdjust;
+                <polygon points="50,@(t+55) 52,@(t+47) 50.5,@(t+47) 50.5,@(t+45) 49.5,@(t+45) 49.5,@(t+47) 48,@(t+47)" fill="@Options.Pointercolour" transform="rotate(0 50 50)" id="pointer" />
+            }
+            else
+            {
+                <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.Pointercolour" transform="rotate(0 50 50)" id="pointer" />            
+            }
+        }
+        else
+        {
 
-            @if(Options.AlternatePointer)
+            if(Options.AlternatePointer)
             {
                 <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
             }
@@ -110,28 +257,20 @@
             {
                 <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.Pointercolour" transform="rotate(@pointerAngle 50 50)" id="pointer" />
             }
-
-
+        }
     </g>
 
-    <!--center-->
-    @if (!Options.AlternatePointer && !Options.RimPointerMode)
+    <!--Boss-->
+    @if (Options.BossMode)
     {
         <circle cx="50" cy="50" r="3" stroke-width="2" fill="@Options.BossColour" />
         <circle cx="50" cy="50" r="1" stroke-width="2" fill="@Options.BossCenterColour" />
     }
 
-    <!-- Text -->
-    <g transform="translate(50, 50)">
-        <text x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="@Options.MakersLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.MakersLabelFont">@Options.MakersLabel</text>
-        <text x="@Options.KeyLabelX" y="@Options.KeyLabelY" font-size="@Options.KeyLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.KeyLabelFont">@Options.KeyLabel</text>
-    </g>
-
     <!-- Dial rim -->
     <circle cx="50" cy="50" r="@Options.DialRadius" stroke="@Options.RimColour" stroke-width="@Options.RimWidth" fill="none" /> 
 
 </svg>
-
 
 @code {
     [Parameter] public DialOptions Options { get; set; } = new DialOptions();
@@ -158,9 +297,15 @@
         maxPointerAngle = pointerAngle;
     }
 
+    private bool lastReverseMode;
     protected override void OnParametersSet()
     {
         UpdateValues();
+        if(lastReverseMode != Options.ReverseMode) 
+        {
+            lastReverseMode = Options.ReverseMode;
+            Reset();
+        }
     }
 
     private void UpdateValues()
@@ -184,16 +329,15 @@
 
     private void Reset()
     {
+        Console.WriteLine("Reset");
         maxPointerAngle = pointerAngle;
     }
 
     private void CalcBarValue()
     {
-
         if(Options.ReverseMode)
         {
             var o = Options.FaceArcAngle;
-
             var j = Options.DialValue * pointerAnglePerIncrement;
 
             pointerAngle = o - j;
@@ -204,10 +348,6 @@
             pointerAngle = Options.DialValue * pointerAnglePerIncrement;
             if (pointerAngle > maxPointerAngle) maxPointerAngle = pointerAngle;
         }
-
-
-
-
     }
 
     private static double CalcRotation(double arcAngle, int offsetRotation)

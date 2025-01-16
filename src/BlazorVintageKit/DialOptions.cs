@@ -235,10 +235,19 @@ namespace BlazorVintageKit
         /// </summary>
         public double AdditionalLabelRadius { get; set; } = 0;
 
-        //someway to put the labels outside of the markers?
 
         //Static pointer - moving dial.
-        //public bool RobMode { get; set; }
+        public bool ScalesMode { get; set; }
 
+        public bool BossMode { get; set; } = true;
+
+        public double ResetButtonXOffset { get; set; }
+        public double ResetButtonYOffset { get; set; }
+
+
+
+        public bool InnerCircleMode { get; set; } = false;
+        public double InnerCircleRadius { get; set; } = 20;
+        public string InnerCircleColour { get; set; } = "#222222";
     }
 }

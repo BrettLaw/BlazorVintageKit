@@ -29,6 +29,14 @@
                 <BlazorVintageKit.Components.Dial Options="@thingsOptions"/>
             </div>
         </div>
+        <div style="width:250px;"> 
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@scalesOptions"/>
+            </div>
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@lbsOptions"/>
+            </div>
+        </div>
     </div>
 </div>
 
@@ -43,6 +51,18 @@
         <div style="margin-left:10px;">
             <label for="DialRange" class="form-label">DialRange:</label>
             <input type="number" @bind="options.DialRange" @bind:event="oninput" class="form-control" id="DialRange" step="50" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="IndicatorCount" class="form-label">IndicatorCount:</label>
+            <input type="number" @bind="options.IndicatorCount" @bind:event="oninput" class="form-control" id="IndicatorCount" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="SubIndicatorCount" class="form-label">SubIndicatorCount:</label>
+            <input type="number" @bind="options.SubIndicatorCount" @bind:event="oninput" class="form-control" id="SubIndicatorCount" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="SubIndicatorLength" class="form-label">SubIndicatorLength:</label>
+            <input type="number" @bind="options.SubIndicatorLength" @bind:event="oninput" class="form-control" id="SubIndicatorLength" step="0.1" style="min-width:6ch;" />
         </div>
     </div>
 
@@ -83,22 +103,14 @@
             <label for="BossCenterColour" class="form-label">BossCenterColour:</label>
             <input type="color" @bind="options.BossCenterColour" @bind:event="oninput" class="form-control" id="BossCenterColour"/>
         </div>
-
+        <div style="margin-left:10px;">
+            <label for="InnerCircleColour" class="form-label">InnerCircleColour:</label>
+            <input type="color" @bind="options.InnerCircleColour" @bind:event="oninput" class="form-control" id="InnerCircleColour"/>
+        </div>
     </div>
 
     <div class="form-group">
-        <div style="margin-left:10px;">
-            <label for="IndicatorCount" class="form-label">IndicatorCount:</label>
-            <input type="number" @bind="options.IndicatorCount" @bind:event="oninput" class="form-control" id="IndicatorCount" step="1" style="min-width:6ch;" />
-        </div>
-        <div style="margin-left:10px;">
-            <label for="SubIndicatorCount" class="form-label">SubIndicatorCount:</label>
-            <input type="number" @bind="options.SubIndicatorCount" @bind:event="oninput" class="form-control" id="SubIndicatorCount" step="1" style="min-width:6ch;" />
-        </div>
-        <div style="margin-left:10px;">
-            <label for="SubIndicatorLength" class="form-label">SubIndicatorLength:</label>
-            <input type="number" @bind="options.SubIndicatorLength" @bind:event="oninput" class="form-control" id="SubIndicatorLength" step="0.1" style="min-width:6ch;" />
-        </div>
+
     </div>
 
 
@@ -150,10 +162,7 @@
         <label>
             <input type="checkbox" @bind="options.SmithsMode" />
         </label>
-        <label for="ResetPointerMode" class="form-label">ResetPointerMode:</label>
-        <label>
-            <input type="checkbox" @bind="options.ResetPointerMode" />
-        </label>
+
         <label for="AlternatePointer" class="form-label">AlternatePointer:</label>
         <label>
             <input type="checkbox" @bind="options.AlternatePointer" />
@@ -165,6 +174,14 @@
         <label for="RimPointerMode" class="form-label">RimPointerMode:</label>
         <label>
             <input type="checkbox" @bind="options.RimPointerMode" />
+        </label>
+        <label for="ScalesMode" class="form-label">ScalesMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.ScalesMode" />
+        </label>
+        <label for="BossMode" class="form-label">BossMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.BossMode" />
         </label>
     </div>
 
@@ -251,10 +268,89 @@
         </div>
     </div>
 
+    <div class="form-group">
+        <label for="ResetPointerMode" class="form-label">ResetPointerMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.ResetPointerMode" />
+        </label>
+        <div style="margin-left:10px;">
+            <label for="ResetButtonXOffset" class="form-label">ResetButtonXOffset:</label>
+            <input type="number" @bind="options.ResetButtonXOffset" @bind:event="oninput" class="form-control" id="ResetButtonXOffset" step="0.1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="ResetButtonYOffset" class="form-label">ResetButtonYOffset:</label>
+            <input type="number" @bind="options.ResetButtonYOffset" @bind:event="oninput" class="form-control" id="ResetButtonYOffset" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="InnerCircleMode" class="form-label">InnerCircleMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.InnerCircleMode" />
+        </label>
+        <div style="margin-left:10px;">
+            <label for="InnerCircleRadius" class="form-label">InnerCircleRadius:</label>
+            <input type="number" @bind="options.InnerCircleRadius" @bind:event="oninput" class="form-control" id="InnerCircleRadius" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
 </div>
 
 @code{
-    static DialOptions options = new DialOptions();
+    static DialOptions options = new DialOptions(){
+        KeyLabel = "Key Label",
+        KeyLabelY = 36,
+        MakersLabel = "Makers Label",
+        MakersLabelY = 28,
+        MakersLabelFont = "cursive"
+    };
+
+    static DialOptions lbsOptions = new DialOptions(){
+        ScalesMode = true,
+        ReverseMode = true,
+        AdditionalRotation = -90,
+        AdditionalLabelRadius = 2.7,
+        RimPointerMode = true,
+        BossMode = false,
+        RiskMode = false,
+        FaceArcAngle = 180,
+        MakersLabel = "",
+        KeyLabelFontSize = 8,
+        KeyLabelY = 20,
+        KeyLabelFont = "",
+        KeyLabel = "lbs",
+        FaceRadius = 37,
+        PointerLengthAdjust = -2
+    };
+
+    static DialOptions scalesOptions = new DialOptions(){
+        DialRange = 20000,
+        AdditionalRotation = 135,
+        RiskMode = true,
+        ResetPointerMode = true,
+        ScalesMode = true,
+        ResetButtonXOffset = -17,
+        MakersLabelY = 17,
+        PointerTailLengthAdjust = -6,
+        KeyLabelY = 23,
+        KeyLabel = "KG",
+        AdditionalLabelRadius = 11.5,
+        FaceRadius = 36,
+        DialColour = "#FFFFFF",
+        FaceColour = "#000000",
+        Pointercolour = "#000000",
+        BossCenterColour = "#FFFFFF",
+        BossColour = "#000000",
+        ResetButtonColour = "#C3C3C3",
+        RiskAdditionalRotation = -31.5,
+        RiskAngle = 108,
+        RiskColour = "#8FD6A4",
+        InnerCircleMode = true,
+        InnerCircleRadius = 30.8,
+        InnerCircleColour = "#FFFFFF",
+        MakersLabelX = 1,
+        SubIndicatorLength = 2
+    };
 
     static DialOptions boostOptions = new DialOptions(){
         FaceArcAngle = 250,
@@ -337,7 +433,7 @@
         Pointercolour = "white",
         BossColour = "white",
         RimColour = "black",
-        FaceRadius = 45,
+        FaceRadius = 32,
         MakersLabel = "blazor vintage kit",
         MakersLabelY = 14,
         MakersLabelFont = "cursive",
@@ -345,9 +441,10 @@
         PointerLengthAdjust = -5,
         PointerTailLengthAdjust = -7,
         ResetPointerMode = true,
-        InnerRing = true,
+        SmithsMode = true,
         ResetButtonColour = "white",
-        LabelFontSize = 7
+        LabelFontSize = 7,
+        AdditionalLabelRadius = 13
     };
 
     static DialOptions thingsOptions = new DialOptions(){
@@ -366,17 +463,20 @@
         LabelFontSize = 7,
         Pointercolour = "#00FF1E",
         DialColour = "#222F4F",
-        FaceColour = "#FFF700"
+        FaceColour = "#FFF700",
+        BossMode = false
     };
 
 
     private List<OptionsWrapper> optionsList = [
         new OptionsWrapper (){dialOptions = options},
-    new OptionsWrapper (){dialOptions = boostOptions }, 
-    new OptionsWrapper (){dialOptions = ampsOptions },
-    new OptionsWrapper (){dialOptions = tempOptions }, 
-    new OptionsWrapper (){dialOptions = voltOptions },
-    new OptionsWrapper (){dialOptions = thingsOptions }];
+        new OptionsWrapper (){dialOptions = boostOptions }, 
+        new OptionsWrapper (){dialOptions = ampsOptions },
+        new OptionsWrapper (){dialOptions = tempOptions }, 
+        new OptionsWrapper (){dialOptions = voltOptions },
+        new OptionsWrapper (){dialOptions = thingsOptions },
+        new OptionsWrapper (){dialOptions = scalesOptions },
+        new OptionsWrapper (){dialOptions = lbsOptions }];
 
     //animation
     private bool isAnimating;
