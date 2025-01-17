@@ -1,0 +1,108 @@
+﻿@page "/wasmdialsegment"
+@rendermode InteractiveWebAssembly
+
+<h3>WASMDial</h3>
+
+
+<div class="demo-panel">
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="barCount" class="form-label">Arc Angle:</label>
+            <input type="number" @bind="arcAngle" @onchange="ArcAngleChanged" @bind:event="oninput" class="form-control" id="barCount" step="5" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="rotate" class="form-label">rotate:</label>
+            <input type="number" @bind="rotate" @bind:event="oninput" class="form-control" id="barCount" step="1" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="offsetRotation" class="form-label">offsetRotation:</label>
+            <input type="number" @bind="additionalRotation" @onchange="ArcAngleChanged" @bind:event="oninput" class="form-control" id="offsetRotation" step="1" style="min-width:6ch;" />
+        </div>
+    </div>
+</div>
+
+
+<div class="dial-container" style="width:300px;height:300px;">
+    <svg class="dial" viewBox="0 0 100 100">
+        <g transform="translate(50, 50) rotate(@rotate)">
+            <path d="M 0 -@arcRadius A @arcRadius @arcRadius 0 @arcV.LargeArcFlag @arcV.SweepFlag @arcV.X @arcV.Y" fill="none" stroke="blue" />
+        </g>
+    </svg>
+</div>
+
+@code {
+    private ArcV arcV;
+    private int arcRadius = 45;
+    private int arcAngle = 270; // Adjust arc angle as needed
+
+    private double rotate = 0;
+    private int additionalRotation = 0;
+
+private void UpdateArc()
+{
+    arcV = CalculateArcDetails(arcRadius, arcAngle);
+    rotate = CalcRotation(arcAngle, additionalRotation);
+}
+
+protected override void OnInitialized()
+{
+    UpdateArc();
+}
+
+protected void ArcAngleChanged()
+{
+    UpdateArc();
+}
+
+
+    
+static ArcV CalculateArcDetails(double radius, double arcAngle)
+{
+    int largeArcFlag = arcAngle > 180 ? 1 : 0;
+    int sweepFlag = 1;
+
+    (double x, double y) = CalculateArcEndpoint(radius, arcAngle);
+
+    return new ArcV(x, y, largeArcFlag, sweepFlag);
+}
+
+
+    static (double, double) CalculateArcEndpoint(double radius, double angleDegrees)
+    {
+        // Convert angle to radians
+        double angleRadians = angleDegrees * Math.PI / 180;
+
+        // Calculate x and y coordinates of the endpoint
+        double x = radius * Math.Sin(angleRadians);  // Sin for x
+        double y = -radius * Math.Cos(angleRadians); // Cos for y, inverted for SVG's coordinate system
+
+        return (x, y);
+    }
+
+    static double CalcRotation(double arcAngle, int offsetRotation)
+    {
+        // Calculate rotation to center missing arc at the bottom
+        return 180 + offsetRotation + (360 - arcAngle) / 2;
+    }
+
+class ArcV
+{
+    public double X { get; }
+    public double Y { get; }
+    public int LargeArcFlag { get; }
+    public int SweepFlag { get; }
+
+    public ArcV(double x, double y, int largeArcFlag, int sweepFlag)
+    {
+        X = x;
+        Y = y;
+        LargeArcFlag = largeArcFlag;
+        SweepFlag = sweepFlag;
+    }
+}
+
+}
+
+

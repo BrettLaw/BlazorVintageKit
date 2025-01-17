@@ -1,0 +1,537 @@
+﻿@page "/wasmdial"
+@using BlazorVintageKit
+@using static BlazorVintageKit.Components.Dial
+@rendermode InteractiveWebAssembly
+
+<h3>WASMDial</h3>
+
+<div style="display:flex;flex-direction:row">
+    <div style="width:500px;">
+        <BlazorVintageKit.Components.Dial Options="@options"/>
+    </div>
+    <div style="display:flex">
+        <div style="width:250px;"> 
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@boostOptions"/>
+            </div>
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@tempOptions"/>
+            </div>
+        </div>
+        <div style="width:170px;">
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@ampsOptions"/>
+            </div>
+            <div style="background-color: black;border-color: antiquewhite;border: groove;">
+                <BlazorVintageKit.Components.Dial Options="@voltOptions"/>
+            </div>
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@thingsOptions"/>
+            </div>
+        </div>
+        <div style="width:250px;"> 
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@scalesOptions"/>
+            </div>
+            <div>
+                <BlazorVintageKit.Components.Dial Options="@lbsOptions"/>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="demo-panel">
+    <label> <input type="checkbox" @onchange="OnAnimateChanged" /> Animate </label>
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="DialValue" class="form-label">DialValue:</label>
+            <input type="number" @bind="options.DialValue" @bind:event="oninput" class="form-control" min="0" max="@options.DialRange" id="DialValue" step="50" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="DialRange" class="form-label">DialRange:</label>
+            <input type="number" @bind="options.DialRange" @bind:event="oninput" class="form-control" id="DialRange" step="50" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="IndicatorCount" class="form-label">IndicatorCount:</label>
+            <input type="number" @bind="options.IndicatorCount" @bind:event="oninput" class="form-control" id="IndicatorCount" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="SubIndicatorCount" class="form-label">SubIndicatorCount:</label>
+            <input type="number" @bind="options.SubIndicatorCount" @bind:event="oninput" class="form-control" id="SubIndicatorCount" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="SubIndicatorLength" class="form-label">SubIndicatorLength:</label>
+            <input type="number" @bind="options.SubIndicatorLength" @bind:event="oninput" class="form-control" id="SubIndicatorLength" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="bgcolour" class="form-label">DialColour:</label>
+            <input type="color" @bind="options.DialColour" @bind:event="oninput" class="form-control" id="bgcolour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="rimcolour" class="form-label">RimColour:</label>
+            <input type="color" @bind="options.RimColour" @bind:event="oninput" class="form-control" id="rimcolour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="FaceColour" class="form-label">FaceColour:</label>
+            <input type="color" @bind="options.FaceColour" @bind:event="oninput" class="form-control" id="FaceColour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="PointerColour" class="form-label">PointerColour:</label>
+            <input type="color" @bind="options.PointerColour" @bind:event="oninput" class="form-control" id="PointerColour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="ResetPointercolour" class="form-label">ResetPointercolour:</label>
+            <input type="color" @bind="options.ResetPointercolour" @bind:event="oninput" class="form-control" id="ResetPointercolour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="ResetButtonColour" class="form-label">ResetButtonColour:</label>
+            <input type="color" @bind="options.ResetButtonColour" @bind:event="oninput" class="form-control" id="ResetButtonColour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="RiskColour" class="form-label">RiskColour:</label>
+            <input type="color" @bind="options.RiskColour" @bind:event="oninput" class="form-control" id="RiskColour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="BossColour" class="form-label">BossColour:</label>
+            <input type="color" @bind="options.BossColour" @bind:event="oninput" class="form-control" id="BossColour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="BossCenterColour" class="form-label">BossCenterColour:</label>
+            <input type="color" @bind="options.BossCenterColour" @bind:event="oninput" class="form-control" id="BossCenterColour"/>
+        </div>
+        <div style="margin-left:10px;">
+            <label for="InnerCircleColour" class="form-label">InnerCircleColour:</label>
+            <input type="color" @bind="options.InnerCircleColour" @bind:event="oninput" class="form-control" id="InnerCircleColour"/>
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="DialRadius" class="form-label">DialRadius:</label>
+            <input type="number" @bind="options.DialRadius" @bind:event="oninput" class="form-control" id="DialRadius" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="FaceRadius" class="form-label">FaceRadius:</label>
+            <input type="number" @bind="options.FaceRadius" @bind:event="oninput" class="form-control" id="FaceRadius" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="RimWidth" class="form-label">RimWidth:</label>
+            <input type="number" @bind="options.RimWidth" @bind:event="oninput" class="form-control" id="RimWidth" step="0.1" style="min-width:6ch;" />
+        </div>
+                <div style="margin-left:10px;">
+            <label for="FaceArcAngle" class="form-label">FaceArcAngle:</label>
+            <input type="number" @bind="options.FaceArcAngle" @bind:event="oninput" class="form-control" id="FaceArcAngle" step="1" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="AdditionalRotation" class="form-label">AdditionalRotation:</label>
+            <input type="number" @bind="options.AdditionalRotation" @bind:event="oninput" class="form-control" id="AdditionalRotation" step="1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="RiskMode" class="form-label">RiskMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.RiskMode" />
+        </label>
+        <div style="margin-left:10px;">
+            <label for="RiskAngle" class="form-label">RiskAngle:</label>
+            <input type="number" @bind="options.RiskAngle" @bind:event="oninput" class="form-control" id="RiskAngle" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="RiskAdditionalRotation" class="form-label">RiskAdditionalRotation:</label>
+            <input type="number" @bind="options.RiskAdditionalRotation" @bind:event="oninput" class="form-control" id="RiskAdditionalRotation" step="1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div style="margin-left:10px;">
+        <label for="InnerRing" class="form-label">InnerRing:</label>
+        <label>
+            <input type="checkbox" @bind="options.InnerRing" />
+        </label>
+        <label for="SmithsMode" class="form-label">SmithsMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.SmithsMode" />
+        </label>
+        <label for="AlternatePointer" class="form-label">AlternatePointer:</label>
+        <label>
+            <input type="checkbox" @bind="options.AlternatePointer" />
+        </label>
+        <label for="ReverseMode" class="form-label">ReverseMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.ReverseMode" />
+        </label>
+        <label for="RimPointerMode" class="form-label">RimPointerMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.RimPointerMode" />
+        </label>
+        <label for="ScalesMode" class="form-label">ScalesMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.ScalesMode" />
+        </label>
+        <label for="BossMode" class="form-label">BossMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.BossMode" />
+        </label>
+    </div>
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="MakersLabel" class="form-label">MakersLabel:</label>
+            <input type="text" @bind="options.MakersLabel" @bind:event="oninput" class="form-control" id="MakersLabel" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="MakersLabelX" class="form-label">MakersLabelX:</label>
+            <input type="number" @bind="options.MakersLabelX" @bind:event="oninput" class="form-control" id="MakersLabelX" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="MakersLabelY" class="form-label">MakersLabelY:</label>
+            <input type="number" @bind="options.MakersLabelY" @bind:event="oninput" class="form-control" id="MakersLabelY" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="MakersLabelFont" class="form-label">MakersLabelFont:</label>
+            <input type="text" @bind="options.MakersLabelFont" @bind:event="oninput" class="form-control" id="MakersLabelFont" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="MakersLabelFontSize" class="form-label">MakersLabelFontSize:</label>
+            <input type="number" @bind="options.MakersLabelFontSize" @bind:event="oninput" class="form-control" id="MakersLabelFontSize" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="KeyLabel" class="form-label">KeyLabel:</label>
+            <input type="text" @bind="options.KeyLabel" @bind:event="oninput" class="form-control" id="KeyLabel" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="KeyLabelX" class="form-label">KeyLabelX:</label>
+            <input type="number" @bind="options.KeyLabelX" @bind:event="oninput" class="form-control" id="KeyLabelX" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="KeyLabelY" class="form-label">KeyLabelY:</label>
+            <input type="number" @bind="options.KeyLabelY" @bind:event="oninput" class="form-control" id="KeyLabelY" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="KeyLabelFont" class="form-label">KeyLabelFont:</label>
+            <input type="text" @bind="options.KeyLabelFont" @bind:event="oninput" class="form-control" id="KeyLabelFont" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="KeyLabelFontSize" class="form-label">KeyLabelFontSize:</label>
+            <input type="number" @bind="options.KeyLabelFontSize" @bind:event="oninput" class="form-control" id="KeyLabelFontSize" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="LabelFont" class="form-label">LabelFont:</label>
+            <input type="text" @bind="options.LabelFont" @bind:event="oninput" class="form-control" id="LabelFont" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="LabelFontSize" class="form-label">LabelFontSize:</label>
+            <input type="number" @bind="options.LabelFontSize" @bind:event="oninput" class="form-control" id="LabelFontSize" step="0.1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="LabelYOffset" class="form-label">LabelYOffset:</label>
+            <input type="number" @bind="options.LabelYOffset" @bind:event="oninput" class="form-control" id="LabelYOffset" step="0.1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="LabelTextRotation" class="form-label">LabelTextRotation:</label>
+            <input type="number" @bind="options.LabelTextRotation" @bind:event="oninput" class="form-control" id="LabelTextRotation" step="0.1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="AdditionalLabelRadius" class="form-label">AdditionalLabelRadius:</label>
+            <input type="number" @bind="options.AdditionalLabelRadius" @bind:event="oninput" class="form-control" id="AdditionalLabelRadius" step="0.1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="ValueDivisor" class="form-label">ValueDivisor:</label>
+            <input type="number" @bind="options.ValueDivisor" @bind:event="oninput" class="form-control" id="ValueDivisor" step="10" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <div style="margin-left:10px;">
+            <label for="PointerLengthAdjust" class="form-label">PointerLengthAdjust:</label>
+            <input type="number" @bind="options.PointerLengthAdjust" @bind:event="oninput" class="form-control" id="PointerLengthAdjust" step="0.1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="PointerTailLengthAdjust" class="form-label">PointerTailLengthAdjust:</label>
+            <input type="number" @bind="options.PointerTailLengthAdjust" @bind:event="oninput" class="form-control" id="PointerTailLengthAdjust" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="ResetPointerMode" class="form-label">ResetPointerMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.ResetPointerMode" />
+        </label>
+        <div style="margin-left:10px;">
+            <label for="ResetButtonXOffset" class="form-label">ResetButtonXOffset:</label>
+            <input type="number" @bind="options.ResetButtonXOffset" @bind:event="oninput" class="form-control" id="ResetButtonXOffset" step="0.1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="ResetButtonYOffset" class="form-label">ResetButtonYOffset:</label>
+            <input type="number" @bind="options.ResetButtonYOffset" @bind:event="oninput" class="form-control" id="ResetButtonYOffset" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+    <div class="form-group">
+        <label for="InnerCircleMode" class="form-label">InnerCircleMode:</label>
+        <label>
+            <input type="checkbox" @bind="options.InnerCircleMode" />
+        </label>
+        <div style="margin-left:10px;">
+            <label for="InnerCircleRadius" class="form-label">InnerCircleRadius:</label>
+            <input type="number" @bind="options.InnerCircleRadius" @bind:event="oninput" class="form-control" id="InnerCircleRadius" step="0.1" style="min-width:6ch;" />
+        </div>
+    </div>
+
+</div>
+
+@code{
+    static DialOptions options = new DialOptions(){
+        KeyLabel = "Key Label",
+        KeyLabelY = 36,
+        MakersLabel = "Makers Label",
+        MakersLabelY = 28,
+        MakersLabelFont = "cursive"
+    };
+
+    static DialOptions lbsOptions = new DialOptions(){
+        ScalesMode = true,
+        ReverseMode = true,
+        AdditionalRotation = -90,
+        AdditionalLabelRadius = 2.7,
+        RimPointerMode = true,
+        BossMode = false,
+        RiskMode = false,
+        FaceArcAngle = 180,
+        MakersLabel = "",
+        KeyLabelFontSize = 8,
+        KeyLabelY = 20,
+        KeyLabelFont = "",
+        KeyLabel = "lbs",
+        FaceRadius = 37,
+        PointerLengthAdjust = -2,
+        InnerRing = true
+    };
+
+    static DialOptions scalesOptions = new DialOptions(){
+        DialRange = 20000,
+        AdditionalRotation = 135,
+        RiskMode = true,
+        ResetPointerMode = true,
+        ScalesMode = true,
+        ResetButtonXOffset = -17,
+        MakersLabelY = 17,
+        PointerTailLengthAdjust = -6,
+        KeyLabelY = 23,
+        KeyLabel = "KG",
+        AdditionalLabelRadius = 11.5,
+        FaceRadius = 36,
+        DialColour = "#FFFFFF",
+        FaceColour = "#000000",
+        PointerColour = "#000000",
+        BossCenterColour = "#FFFFFF",
+        BossColour = "#000000",
+        ResetButtonColour = "#C3C3C3",
+        RiskAdditionalRotation = -31.5,
+        RiskAngle = 108,
+        RiskColour = "#8FD6A4",
+        InnerCircleMode = true,
+        InnerCircleRadius = 30.8,
+        InnerCircleColour = "#FFFFFF",
+        MakersLabelX = 1,
+        SubIndicatorLength = 2
+    };
+
+    static DialOptions boostOptions = new DialOptions(){
+        FaceArcAngle = 250,
+        AdditionalRotation = -55,
+        MakersLabelX = 20,
+        MakersLabelY = 13,
+        KeyLabel = "PSI",
+        KeyLabelX = 20,
+        DialRange = 1400,
+        IndicatorCount = 8,
+        SubIndicatorCount = 1,
+        SmithsMode = true,
+        FaceColour = "black",
+        DialColour ="#FFFDE7",
+        PointerColour = "black",
+        BossColour = "black",
+        BossCenterColour = "silver",
+        RiskColour = "#FE6767",
+        RiskAngle = 30,
+        FaceRadius = 43,
+        LabelFontSize = 7.5
+    };
+
+    static DialOptions ampsOptions = new DialOptions(){
+        FaceArcAngle = 180,
+        AdditionalRotation = 90,
+        DialRange = 300,
+        IndicatorCount = 4,
+        FaceRadius = 36,
+        KeyLabel = "AMPS",
+        KeyLabelX = -17,
+        KeyLabelY = 18,
+        KeyLabelFontSize = 7.2,
+        MakersLabelX = -17,
+        MakersLabelY = -15,
+        RiskMode = false,
+        InnerRing = true,
+        SubIndicatorCount = 1,
+        SubIndicatorLength = 3.3,
+        PointerLengthAdjust = -10,
+        PointerTailLengthAdjust = -11,
+        PointerColour = "#FF0000",
+        BossColour = "#FF0000"
+    };
+
+    static DialOptions tempOptions = new DialOptions(){
+        DialRange = 2000,
+        AdditionalRotation = 45,
+        ReverseMode = true,
+        SubIndicatorCount = 3,
+        MakersLabelX = -19,
+        KeyLabel = "°C * 10",
+        KeyLabelX = -19.5,
+        KeyLabelY = 20,
+        KeyLabelFontSize = 6.5,
+        DialColour = "white",
+        FaceColour = "black",
+        PointerColour = "#OO1EFF",
+        BossColour = "black",
+        BossCenterColour = "white",
+        InnerRing = true,
+        SmithsMode = true,
+        RiskMode = true,
+        RiskAdditionalRotation = 72,
+        RiskAngle = 54,
+        RiskColour = "#DD9898",
+        ResetPointerMode = true,
+        ResetButtonColour = "#A50D0D",
+        LabelFont = "verdana",
+        LabelFontSize = 5.5,
+        PointerTailLengthAdjust = -6
+    };
+
+    static DialOptions voltOptions = new DialOptions(){
+        DialRange = 8000,
+        FaceArcAngle = 130,
+        IndicatorCount = 6,
+        SubIndicatorCount = 0,
+        RiskMode = false,
+        PointerColour = "white",
+        BossColour = "white",
+        RimColour = "black",
+        FaceRadius = 32,
+        MakersLabel = "blazor vintage kit",
+        MakersLabelY = 14,
+        MakersLabelFont = "cursive",
+        KeyLabel = "volts",
+        PointerLengthAdjust = -5,
+        PointerTailLengthAdjust = -7,
+        ResetPointerMode = true,
+        SmithsMode = true,
+        ResetButtonColour = "white",
+        LabelFontSize = 7,
+        AdditionalLabelRadius = 13
+    };
+
+    static DialOptions thingsOptions = new DialOptions(){
+        DialRange = 500,
+        IndicatorCount = 6,
+        RiskMode = false,
+        FaceArcAngle = 230,
+        AdditionalRotation = 180,
+        ReverseMode = true,
+        AlternatePointer = true,
+        FaceRadius = 38,
+        MakersLabel = string.Empty,
+        KeyLabelY = -23,
+        KeyLabel = "THINGS / MIN",
+        KeyLabelFont = "verdana",
+        LabelFontSize = 7,
+        PointerColour = "#00FF1E",
+        DialColour = "#222F4F",
+        FaceColour = "#FFF700",
+        BossMode = false
+    };
+
+
+    private List<OptionsWrapper> optionsList = [
+        new OptionsWrapper (){dialOptions = options},
+        new OptionsWrapper (){dialOptions = boostOptions }, 
+        new OptionsWrapper (){dialOptions = ampsOptions },
+        new OptionsWrapper (){dialOptions = tempOptions }, 
+        new OptionsWrapper (){dialOptions = voltOptions },
+        new OptionsWrapper (){dialOptions = thingsOptions },
+        new OptionsWrapper (){dialOptions = scalesOptions },
+        new OptionsWrapper (){dialOptions = lbsOptions }];
+
+    //animation
+    private bool isAnimating;
+    private void OnAnimateChanged(ChangeEventArgs e)
+    {
+        isAnimating = (bool)e.Value!;
+        if (isAnimating)
+        { StartAnimation(); }
+    }
+    private async void StartAnimation()
+    {
+        while (isAnimating)
+        {
+            PerformAnimationStep();
+            await Task.Delay(100);
+        }
+    }
+
+    // private int targetValue = 0;
+    // private int speed = 10;
+    private Random random = new Random();
+    private void PerformAnimationStep()
+    {
+        foreach(OptionsWrapper o in optionsList)
+        {
+            double maxspeed = (o.dialOptions.DialRange/100)*4;
+            double minspeed = (o.dialOptions.DialRange/100)*3;
+
+            if (o.dialOptions.DialValue > o.dialOptions.DialRange) 
+            {
+                o.dialOptions.DialValue = 0;
+                o.targetValue = o.dialOptions.DialRange / 2;
+            }
+
+            bool isWithinRange = Math.Abs(o.dialOptions.DialValue - o.targetValue) <= o.speed;
+            if (isWithinRange)
+            {
+                o.targetValue = random.Next(0, o.dialOptions.DialRange);
+
+                o.speed = random.Next((int)minspeed, (int)maxspeed);
+            }
+
+            if (o.dialOptions.DialValue > o.targetValue)
+            {
+                o.dialOptions.DialValue -= o.speed;
+            }
+            else if (o.dialOptions.DialValue < o.targetValue)
+            {
+                o.dialOptions.DialValue += o.speed;
+            }
+        }
+
+        StateHasChanged();
+    }
+
+
+    class OptionsWrapper{
+        public DialOptions dialOptions;
+        public int speed = 10;
+        public int targetValue = 0;
+    }
+}

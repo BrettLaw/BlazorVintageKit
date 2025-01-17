@@ -1,0 +1,524 @@
+﻿@page "/wasmvintagedialtest"
+@rendermode InteractiveWebAssembly
+
+<h3>WASMDial</h3>
+
+
+<div class="dial-container" style="width:400px;height:400px;background-color:darkslategrey;">
+    <svg class="dial" viewBox="0 0 100 100">
+
+        <!--Outer dial perimeter-->
+        <circle cx="50" cy="50" r="45" fill="@bgcolour" />
+
+
+        @if (riskMode)
+        {
+            <!-- Risk segment -->
+            <g transform="translate(50, 50) rotate(@riskRotate)">
+                <path d="M 0 0 L 45 0 A 45 45 0 0 1 @segmentArc.Item1 @segmentArc.Item2 Z" fill="@riskcolour" />
+                @* <path d="M 0 0 L 45 0 A 45 45 0 0 1 @segmentArcV.X @(segmentArcV.Y) Z" fill="darkred" /> *@
+
+            </g>
+        }
+
+        <!-- Circle edge colour -->
+        <circle cx="50" cy="50" r="45" stroke="@colour" stroke-width="2" fill="none" />
+
+
+        @if (showInnerRing)
+        {
+            <!--Inner dial arc-->
+            @*             <g transform="translate(50, 50) rotate(@rotate)">
+                <path d="M 0 @(dialMarkerDiameter*-1) A @dialMarkerDiameter @dialMarkerDiameter 0 1 1 @(dialMarkerDiameter*-1) 0" stroke="@colour" stroke-width="0.8" fill="none" />
+            </g>
+ *@
+            <g transform="translate(50, 50) rotate(@rotate)">
+                <path d="M 0 -@arcRadius A @arcRadius @arcRadius 0 @arcV.LargeArcFlag @arcV.SweepFlag @arcV.X @arcV.Y" fill="none" stroke="@colour" />
+            </g>
+
+
+        }
+        @if (smithsMode)
+        {
+            <g transform="translate(50, 50) rotate(@rotate)">
+
+                @* <path d="M 0 @((dialMarkerDiameter-5)*-1) A @((dialMarkerDiameter-5)) @((dialMarkerDiameter-5)) 0 1 1 @((dialMarkerDiameter-5)*-1) 0" stroke="@colour" stroke-width="0.8" fill="none" /> *@
+
+                <path d="M 0 -@(arcRadius-5) A @(arcRadius-5) @(arcRadius-5) 0 @smithsArcV.LargeArcFlag @smithsArcV.SweepFlag @smithsArcV.X @smithsArcV.Y" fill="none" stroke="@colour" />
+
+            </g>
+        }
+
+        <!-- combined dial marks-->
+        <g transform="translate(50, 50) rotate(@rotate)">
+            @for (int i = 0; i <= (indicatorCount * (subIndicatorCount + 1)); i++)
+            {
+                var anglePerMark = i * perMarkerAngle; // 270 degrees divided by the total number of small intervals
+                if (i % (subIndicatorCount + 1) == 0) // Every 5th mark is a large mark
+                {
+                    <line x1="0" y1="@((arcRadius-5)*-1)" x2="0" y2="@(arcRadius*-1)" stroke="@colour" stroke-width="0.5" transform="rotate(@anglePerMark)"/>
+                }
+                else // Small marks
+                {
+                    <line x1="0" y1="@((arcRadius-5)*-1)" x2="0" y2="@((arcRadius)*-1)" stroke="@colour" stroke-width="0.2" transform="rotate(@anglePerMark)"/>
+                }
+            }
+        </g>
+
+
+        <!-- text labels -->
+        <g transform="translate(50, @(50+charYOffset))">
+            @{
+                var angleoffset = (rotate*-1) + charRotation;
+                var textoffset = (arcRadius-10)*-1;
+
+                for (int i = 0; i <= indicatorCount; i++)
+                {
+                    var angle = angleoffset - i * (arcAngle/indicatorCount); // Adjust the angle calculation
+                    var radians = angle * Math.PI / 180; // Convert angle to radians
+                    var x = textoffset * Math.Sin(radians); // Calculate x position
+                    var y = textoffset * Math.Cos(radians); // Calculate y position
+
+                    Console.WriteLine("x="+x+" y="+y);
+
+                    <text><text x="@x" y="@y" style="cursor:default;" transform="rotate(@charTextRotation @x @(y-(fontsize)))" font-size="@(fontsize)px" text-anchor="middle" fill="@colour">@((i * indicatorRange / 100).ToString())</text></text>
+                }
+            }
+        </g>
+
+
+        @if (resetPointerMode)
+        {
+            <!-- reset pointer -->
+            <g transform="rotate(@rotate 50 50)">
+                <polygon points="49.7,8 50.3,8 50.6,65 49.4,65" fill="red" transform="rotate(@maxbarValue 50 50)" id="pointer" />
+            </g>
+            <g transform="rotate(@additionalRotation 50 50)">
+                <circle cx="50" cy="90" r="2" stroke-width="2" fill="@colour" @onclick="Reset" style="cursor:pointer;"/>
+            </g>
+        }
+
+        <!-- pointer -->
+        <g transform="rotate(@rotate 50 50)">
+
+            @* <polygon points="49.5,8 50.5,8 51,65 49,65" fill="@pointercolour" transform="rotate(@barValue 50 50)" id="pointer" /> *@
+
+            <polygon points="49.5,8 50.5,8 51,65 49,65" fill="@pointercolour" transform="rotate(@barValue 50 50)" id="pointer" />
+
+            @* <polygon points="50,10 53,20 51,60 49,60 47,20" fill="@pointercolour" transform="rotate(@barValue 50 50)" id="pointer" /> *@
+
+            @* <polygon points="50,@((arcRadius*-1)+55) 53,@((arcRadius*-1)+65) 47,@((arcRadius*-1)+65)" fill="@pointercolour" transform="rotate(@barValue 50 50)" id="pointer" /> *@
+
+        </g>
+
+
+
+
+        <!--center-->
+        <circle cx="50" cy="50" r="3" stroke-width="2" fill="@colour" />
+        <circle cx="50" cy="50" r="1" stroke-width="2" fill="@bgcolour" />
+
+
+        <!-- Text -->
+        <g transform="translate(50, 50)">
+            <text x="0" y="10" font-size="5" text-anchor="middle" fill="@colour" style="cursor:default;" font-family="Courier, monospace">@CenterLabel</text>
+
+            <text x="0" y="@keyTextY" font-size="5" text-anchor="middle" fill="@colour" style="cursor:default;">@BottomLabel</text>
+        </g>
+
+    </svg>
+</div>
+<p>TargetDialValue @targetValue</p>
+<p>Dial Value @DialValue</p>
+<p>Bar Value @barValue</p>
+<p>AngleOffset @angleoffset</p>
+<p>Text Offset @textoffset</p>
+<details>
+    <summary>dbg</summary>
+    @*     <p>segmentArcV.LargeArcFlag @segmentArcV.LargeArcFlag</p>
+    <p>segmentArcV.SweepFlag @segmentArcV.SweepFlag</p>
+    <p>segmentArcV.X @segmentArcV.X</p>
+    <p>segmentArcV.Y @segmentArcV.Y</p>
+ *@    <p>segmentArc.Item1 @segmentArc.Item1</p>
+    <p>segmentArc.Item2 @segmentArc.Item2</p>
+    <p>arcAngle @arcAngle</p>
+    <p>perMarkerAngle @perMarkerAngle</p>
+    <p>total Marker Angle @(perMarkerAngle * (indicatorCount * 5))</p>
+    <p>indicator count @indicatorCount</p>
+    <p>expectedIndicatorCount @expectedIndicatorCount</p>
+    <p>segmentArc.Item1 @segmentArc.Item1</p>
+    <p>segmentArc.Item2 @segmentArc.Item2</p>
+</details>
+
+<label> <input type="checkbox" @onchange="OnAnimateChanged" /> Animate </label>
+
+<div class="demo-panel">
+    <div class="form-group">
+
+        <div style="margin-left:10px;">
+            <label for="DialValue" class="form-label">Dial Value:</label>
+            <input type="number" @onchange="DialValueChanged" @bind="DialValue" @bind:event="oninput" class="form-control" id="DialValue" step="100" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="DialRange" class="form-label">Dial Range:</label>
+            <input type="number" @onchange="ArcAngleChanged" @bind="DialRange" @bind:event="oninput" class="form-control" id="DialRange" step="100" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="indicatorCount" class="form-label">Indicator Count:</label>
+            <input type="number" @onchange="ArcAngleChanged" @bind="indicatorCount" @bind:event="oninput" class="form-control" id="indicatorCount" step="1" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="subIndicatorCount" class="form-label">Sub Indicator Count:</label>
+            <input type="number" @onchange="ArcAngleChanged" @bind="subIndicatorCount" @bind:event="oninput" class="form-control" id="subIndicatorCount" min="0" max="4" step="1" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="barCount" class="form-label">Arc Angle:</label>
+            <input type="number" @bind="arcAngle" @onchange="ArcAngleChanged" @bind:event="oninput" class="form-control" id="barCount" step="1" style="min-width:6ch;" />
+        </div>
+
+        @*         <div style="margin-left:10px;">
+            <label for="rotate" class="form-label">rotate:</label>
+            <input type="number" @bind="rotate" @bind:event="oninput" class="form-control" id="barCount" step="1" style="min-width:6ch;" />
+        </div> *@
+
+        <div style="margin-left:10px;">
+            <label for="offsetRotation" class="form-label">offsetRotation:</label>
+            <input type="number" @bind="additionalRotation" @onchange="ArcAngleChanged" @bind:event="oninput" class="form-control" id="offsetRotation" step="1" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="segmentAngle" class="form-label">Risk Angle:</label>
+            <input type="number" @bind="segmentAngle" @onchange="ArcAngleChanged" @bind:event="oninput" class="form-control" id="segmentAngle" step="5" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="segmentRotation" class="form-label">Risk rotation:</label>
+            <input type="number" @bind="segmentRotation" @onchange="ArcAngleChanged" @bind:event="oninput" class="form-control" id="segmentRotation" step="5" style="min-width:6ch;" />
+        </div>
+
+
+        <div style="margin-left:10px;">
+            <label for="arcRadius" class="form-label">arcRadius:</label>
+            <input type="number" @bind="arcRadius" @onchange="ArcAngleChanged" @bind:event="oninput" class="form-control" id="arcRadius" step="5" style="min-width:6ch;" />
+        </div>
+
+        @*         <div style="margin-left:10px;">
+            <label for="rotation" class="form-label">rotation:</label>
+            <input type="number" @bind="rotation" @bind:event="oninput" class="form-control" id="rotation" step="5" style="min-width:6ch;" />
+        </div> *@
+
+        <div style="margin-left:10px;">
+            <label for="showInnerRing" class="form-label">Inner Ring:</label>
+            <label>
+                <input type="checkbox" @bind="showInnerRing" />
+            </label>
+            <label for="smithsMode" class="form-label">smithsMode:</label>
+            <label>
+                <input type="checkbox" @bind="smithsMode" />
+            </label>
+            <label for="riskMode" class="form-label">riskMode:</label>
+            <label>
+                <input type="checkbox" @bind="riskMode" />
+            </label>
+            <label for="resetPointerMode" class="form-label">resetPointerMode:</label>
+            <label>
+                <input type="checkbox" @bind="resetPointerMode" />
+            </label>
+        </div>
+
+        @*         <div style="margin-left:10px;">
+            <label for="dialMarkerDiameter" class="form-label">dialMarkerDiameter:</label>
+            <input type="number" @bind="dialMarkerDiameter" @bind:event="oninput" class="form-control" id="dialMarkerDiameter" step="5" style="min-width:6ch;" />
+        </div> *@
+
+        <div style="margin-left:10px;">
+            <label for="fontsize" class="form-label">fontsize:</label>
+            <input type="number" @bind="fontsize" @bind:event="oninput" class="form-control" id="fontsize" step="0.2" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="charYOffset" class="form-label">charYOffset:</label>
+            <input type="number" @bind="charYOffset" @bind:event="oninput" class="form-control" id="charYOffset" step="1" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="charRotation" class="form-label">char Rotation:</label>
+            <input type="number" @bind="charRotation" @bind:event="oninput" class="form-control" id="charRotation" step="5" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="charTextRotation" class="form-label">char Text Rotation:</label>
+            <input type="number" @bind="charTextRotation" @bind:event="oninput" class="form-control" id="charTextRotation" step="5" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="keyTextY" class="form-label">keyTextY:</label>
+            <input type="number" @bind="keyTextY" @bind:event="oninput" class="form-control" id="keyTextY" step="1" style="min-width:6ch;" />
+        </div>
+
+        <div style="margin-left:10px;">
+            <label for="bgcolour" class="form-label">Background Colour:</label>
+            <input type="color" @bind="bgcolour" @bind:event="oninput" class="form-control" id="bgcolour" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="colour" class="form-label">Colour:</label>
+            <input type="color" @bind="colour" @bind:event="oninput" class="form-control" id="colour" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="pointercolour" class="form-label">Pointer Colour:</label>
+            <input type="color" @bind="pointercolour" @bind:event="oninput" class="form-control" id="pointercolour" style="min-width:6ch;" />
+        </div>
+        <div style="margin-left:10px;">
+            <label for="riskcolour" class="form-label">Risk Colour:</label>
+            <input type="color" @bind="riskcolour" @bind:event="oninput" class="form-control" id="riskcolour" style="min-width:6ch;" />
+        </div>
+
+    </div>
+</div>
+
+
+@code {
+    //param
+    private int DialRange = 10000;
+    //param
+    private int DialValue = 0;
+
+    private float barValue = 0;
+    private float maxbarValue = 0;
+
+    //component colours
+    private string bgcolour = "#000000";
+    private string colour = "#FFFFFF";
+    private string pointercolour = "#FFFF00";
+    private string riskcolour = "#BF1818";
+
+    //risk segment
+    private int segmentRotation = 0;
+    //private ArcV segmentArcV;
+    private (double,double) segmentArc;
+    private int segmentRadius = 45;
+    private int segmentAngle = 45;
+    private double riskRotate;
+
+    //display options
+    private bool showInnerRing = false;
+    private bool smithsMode = false;
+    private bool riskMode = true;
+    private bool resetPointerMode = false;
+
+    private int additionalRotation = 0;
+
+    //indicator marks
+    private int indicatorCount = 10;
+    private int indicatorRange => DialRange / indicatorCount;
+    private int subIndicatorCount = 4;
+
+    //private int debugIndicatorCount = 0;
+
+    //text labels
+    private int charYOffset = 2;
+    private int charRotation = 0;
+    private int charTextRotation = 0;
+    private int keyTextY = 25;
+    private string CenterLabel = "B.V.K.";
+    private string BottomLabel = "RPM x 100";
+    private double fontsize = 5;
+
+    //pointer
+    private float pointerAnglePerIncrement = 0;
+
+
+    //private int rotation = 225;
+    //private int dialMarkerDiameter = 40;
+
+    private double perMarkerAngle;
+    private double expectedIndicatorCount;
+
+    private ArcV smithsArcV;
+
+
+    private ArcV arcV;
+    private int arcRadius = 40;
+    private double arcAngle = 270; // Adjust arc angle as needed
+
+    private double rotate = 0;
+
+    private void Reset()
+    {
+        maxbarValue = barValue;
+    }
+
+    private void UpdateArc()
+    {
+        smithsArcV = CalculateArcDetails(arcRadius-5, arcAngle);
+
+        arcV = CalculateArcDetails(arcRadius, arcAngle);
+        rotate = CalcRotation(arcAngle, additionalRotation);
+
+        segmentArc = CalculateRiskEndpoint(segmentRadius, segmentAngle);
+
+        //segmentArc = CalculateArcEndpoint(segmentRadius, segmentAngle);
+
+        //segmentArcV = CalculateArcDetails(segmentRadius, segmentAngle);
+
+        expectedIndicatorCount = (indicatorCount * (subIndicatorCount + 1));
+        perMarkerAngle = (arcAngle / expectedIndicatorCount) ;
+
+        pointerAnglePerIncrement = (float)arcAngle / DialRange;
+
+        riskRotate = segmentRotation + ((segmentRotation + 45 - segmentAngle)) + additionalRotation + ((arcAngle - 270) / 2);
+
+        CalcBarValue();
+    }
+
+
+    private void CalcBarValue(){
+
+        barValue = DialValue * pointerAnglePerIncrement;
+
+        if (barValue > maxbarValue) maxbarValue = barValue;
+    }
+
+    protected override void OnInitialized()
+    {
+        UpdateArc();
+    }
+
+    protected void ArcAngleChanged()
+    {
+        UpdateArc();
+    }
+
+    private void DialValueChanged()
+    {
+        CalcBarValue();
+    }
+
+    //just a segment
+    public static (double, double) CalculateRiskEndpoint(double radius, double angle)
+    {
+        double radians = Math.PI * angle / 180.0; // Convert angle to radians
+        double x = radius * Math.Cos(radians);    // Calculate x-coordinate
+        double y = radius * Math.Sin(radians);    // Calculate y-coordinate
+        return (x, y);
+    }
+
+
+
+
+    static ArcV CalculateArcDetails(double radius, double arcAngle)
+    {
+        int largeArcFlag = arcAngle > 180 ? 1 : 0;
+        int sweepFlag = 1;
+
+        (double x, double y) = CalculateArcEndpoint(radius, arcAngle);
+
+        return new ArcV(x, y, largeArcFlag, sweepFlag);
+    }
+
+
+    static (double, double) CalculateArcEndpoint(double radius, double angleDegrees)
+    {
+        // Convert angle to radians
+        double angleRadians = angleDegrees * Math.PI / 180;
+
+        // Calculate x and y coordinates of the endpoint
+        double x = radius * Math.Sin(angleRadians);  // Sin for x
+        double y = -radius * Math.Cos(angleRadians); // Cos for y, inverted for SVG's coordinate system
+
+        return (x, y);
+    }
+
+    static double CalcRotation(double arcAngle, int offsetRotation)
+    {
+        // Calculate rotation to center missing arc at the bottom
+        return 180 + offsetRotation + (360 - arcAngle) / 2;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    //animation
+    private bool isAnimating;
+    private void OnAnimateChanged(ChangeEventArgs e)
+    {
+        isAnimating = (bool)e.Value!;
+        if (isAnimating)
+        { StartAnimation(); }
+    }
+    private async void StartAnimation()
+    {
+        while (isAnimating)
+        {
+            PerformAnimationStep();
+            await Task.Delay(100);
+        }
+    }
+    private int targetValue = 0;
+    private int speed = 100;
+    private Random random = new Random();
+    private void PerformAnimationStep()
+    {
+        bool isWithinRange = Math.Abs(DialValue - targetValue) <= speed;
+        if (isWithinRange)
+        {
+            targetValue = random.Next(0, DialRange);
+
+            int delta = Math.Abs(DialValue - targetValue)/4;
+            if (delta < 50) delta = 100;
+
+            speed = random.Next(50, delta);
+        }
+
+        if (DialValue > targetValue)
+        {
+            DialValue -= speed;
+        }
+        else if (barValue < targetValue)
+        {
+            DialValue += speed;
+        }
+
+
+        CalcBarValue();
+
+
+        StateHasChanged();
+    }
+
+
+
+
+class ArcV
+{
+    public double X { get; }
+    public double Y { get; }
+    public int LargeArcFlag { get; }
+    public int SweepFlag { get; }
+
+    public ArcV(double x, double y, int largeArcFlag, int sweepFlag)
+    {
+        X = x;
+        Y = y;
+        LargeArcFlag = largeArcFlag;
+        SweepFlag = sweepFlag;
+    }
+}
+
+}
+
+
