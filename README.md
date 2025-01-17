@@ -12,6 +12,10 @@ A vintage inspired seventeen segment display and configuration scoller for Blazo
   <summary>Click for LED stack animated screenshot</summary>
   <p> <img src="media/BVKLS.gif" alt="LED Stack animation" /> </p>
 </details>
+<details>
+  <summary>Click for configurable Dial animated screenshot</summary>
+  <p> <img src="media/BVKDial.gif" alt="Dial animation" /> </p>
+</details>
 
 ## Table of Contents
 
@@ -36,7 +40,7 @@ This package provides:
 * A seventeen segment display:<br>
 	<img src="media/SeventeenSegment.png" alt="Seventeen Segment Display" /><br>
 	<code><BlazorVintageKit.Components.SeventeenSegmentDisplay Character="@CurrentCharacter" /></code>
-* A scroller composed of seventeed segment displays:
+* A scroller composed of seventeen segment displays:
 	<img src="media/Scroller.png" alt="Seventeen Segment Scroller" /><br>
 	<code><BlazorVintageKit.Components.RetroScrollingDisplay DisplayText="Text to scroll." /></code><br>
 	customisable like this:<br>
@@ -44,6 +48,12 @@ This package provides:
 * An LED stack:<br>
 	<img src="media/LEDStack.png" alt="LED Stack" /><br>
 	<code><BlazorVintageKit.Components.LEDStack BarValue=@barValue BarCount=11 LowLimit=4 MedLimit=7 /></code>
+* A VERY configurable Dial component:<br>
+	<img src="media/Dial.png" alt="Dial" /><br>
+	<code><BlazorVintageKit.Components.Dial Options="new DialOptions()"/></code>
+	
+While these can be used with blazor server rendering, WASM is recommended.	
+
 ## Contributing
 ?
 
