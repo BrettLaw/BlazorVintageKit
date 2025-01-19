@@ -12,6 +12,7 @@
 		<PackageTags>Blazor component retro UI</PackageTags>
 		<RepositoryUrl>https://github.com/BrettLaw/BlazorVintageKit</RepositoryUrl>
 		<PackageLicenseFile>LICENSE.txt</PackageLicenseFile>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 	</PropertyGroup>
 
 	<ItemGroup>
@@ -30,6 +31,7 @@
 		</Content>
 		<Content Update="wwwroot\css\your-component-styles.css" CopyToOutputDirectory="PreserveNewest" Pack="true" />
 		<None Include="..\..\LICENSE.txt" Pack="true" PackagePath="" />
+		<None Include="..\..\README.md" Pack="true" PackagePath="\"/>
 	</ItemGroup>
 
 </Project>

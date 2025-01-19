@@ -1,7 +1,7 @@
 ﻿<svg version="1.1" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" xml:space="preserve">
 
     <!--Outer dial perimeter-->
-    <circle cx="50" cy="50" r="@Options.DialRadius" fill="@Options.DialColour" />
+    <circle id="c_outer" cx="50" cy="50" r="@Options.DialRadius" fill="@Options.DialColour" />
 
     <!-- Risk segment -->
     @if (Options.RiskMode)
@@ -9,13 +9,13 @@
         if(Options.ScalesMode)
         {
             var r = (_riskRotate + _pointerAngle) * -1;
-            <g transform="translate(50, 50) rotate(@r)">
+            <g id="g_risk" transform="translate(50, 50) rotate(@r)">
                 <path d="M 0 0 L @Options.DialRadius 0 A @Options.DialRadius @Options.DialRadius 0 0 1 @_segmentArc.Item1 @_segmentArc.Item2 Z" fill="@Options.RiskColour" />
             </g>
         }
         else
         {
-            <g transform="translate(50, 50) rotate(@_riskRotate)">
+            <g id="g_risk" transform="translate(50, 50) rotate(@_riskRotate)">
                 <path d="M 0 0 L @Options.DialRadius 0 A @Options.DialRadius @Options.DialRadius 0 0 1 @_segmentArc.Item1 @_segmentArc.Item2 Z" fill="@Options.RiskColour" />
             </g>
         }
@@ -24,7 +24,7 @@
     <!--Inner Circle Mode-->
     @if(Options.InnerCircleMode)
     {
-        <circle cx="50" cy="50" r="@Options.InnerCircleRadius" fill="@Options.InnerCircleColour" />
+        <circle id="c_innerCircle" cx="50" cy="50" r="@Options.InnerCircleRadius" fill="@Options.InnerCircleColour" />
     }
 
     @if (Options.InnerRing)
@@ -33,20 +33,20 @@
         {var r = (_rotate + (_pointerAngle*-1));
             if(Options.ReverseMode)
             {
-                <g transform="translate(50, 50) rotate(@r)">
+                <g id="g_innerRing" transform="translate(50, 50) rotate(@r)">
                     <path d="M 0 -@Options.FaceRadius A @Options.FaceRadius @Options.FaceRadius 0 @_arcV.LargeArcFlag @_arcV.SweepFlag @_arcV.X @_arcV.Y" fill="none" stroke="@Options.FaceColour" />
                 </g>
             }
             else
             {
-                <g transform="translate(50, 50) rotate(@r)">
+                <g id="g_innerRing" transform="translate(50, 50) rotate(@r)">
                     <path d="M 0 -@Options.FaceRadius A @Options.FaceRadius @Options.FaceRadius 0 @_arcV.LargeArcFlag @_arcV.SweepFlag @_arcV.X @_arcV.Y" fill="none" stroke="@Options.FaceColour" />
                 </g>
             }
         }
         else
         {
-            <g transform="translate(50, 50) rotate(@_rotate)">
+            <g id="g_innerRing" transform="translate(50, 50) rotate(@_rotate)">
                 <path d="M 0 -@Options.FaceRadius A @Options.FaceRadius @Options.FaceRadius 0 @_arcV.LargeArcFlag @_arcV.SweepFlag @_arcV.X @_arcV.Y" fill="none" stroke="@Options.FaceColour" />
             </g>
         }
@@ -57,20 +57,20 @@
         {var r = (_rotate + (_pointerAngle*-1));
             if(Options.ReverseMode)
             {
-                <g transform="translate(50, 50) rotate(@r)">
+                <g id="g_smithsRing" transform="translate(50, 50) rotate(@r)">
                     <path d="M 0 -@(Options.FaceRadius-5) A @(Options.FaceRadius-5) @(Options.FaceRadius-5) 0 @_smithsArcV.LargeArcFlag @_smithsArcV.SweepFlag @_smithsArcV.X @_smithsArcV.Y" fill="none" stroke="@Options.FaceColour" />
                 </g>
             }
             else
             {
-                <g transform="translate(50, 50) rotate(@r)">
+                <g id="g_smithsRing" transform="translate(50, 50) rotate(@r)">
                     <path d="M 0 -@(Options.FaceRadius-5) A @(Options.FaceRadius-5) @(Options.FaceRadius-5) 0 @_smithsArcV.LargeArcFlag @_smithsArcV.SweepFlag @_smithsArcV.X @_smithsArcV.Y" fill="none" stroke="@Options.FaceColour" />
                 </g>
             }
         }
         else
         {
-            <g transform="translate(50, 50) rotate(@_rotate)">
+            <g id="g_smithsRing" transform="translate(50, 50) rotate(@_rotate)">
                 <path d="M 0 -@(Options.FaceRadius-5) A @(Options.FaceRadius-5) @(Options.FaceRadius-5) 0 @_smithsArcV.LargeArcFlag @_smithsArcV.SweepFlag @_smithsArcV.X @_smithsArcV.Y" fill="none" stroke="@Options.FaceColour" />
             </g>
         }
@@ -81,7 +81,7 @@
         {
             var r = _rotate + (_pointerAngle * -1);
             var loopCount = (Options.IndicatorCount - 1) * (_lastSubIndicatorCount + 1);
-            <g transform="translate(50, 50) rotate(@r)">
+            <g id="g_indicators" transform="translate(50, 50) rotate(@r)">
 
                 @{
                     var largeMarkY1 = (Options.FaceRadius-5)*-1;
@@ -104,7 +104,7 @@
         }
         else
         {
-            <g transform="translate(50, 50) rotate(@_rotate)">
+            <g id="g_indicators" transform="translate(50, 50) rotate(@_rotate)">
                 @{
                     var loopCount = (Options.IndicatorCount-1) * (_lastSubIndicatorCount + 1);
                     for (int i = 0; i <= loopCount; i++)
@@ -132,7 +132,7 @@
 
         @if(Options.ScalesMode)
         {
-            <g transform="translate(50, 50) rotate(@(_rotate))">
+            <g id="g_textIndicators" transform="translate(50, 50) rotate(@(_rotate))">
                 @{
                     var angleoffset = (_pointerAngle) + _charRotation;
                     var textoffset = (Options.FaceRadius-10+Options.AdditionalLabelRadius)*-1;
@@ -178,7 +178,7 @@
         }
         else
         {
-            <g transform="translate(50, @(50+Options.LabelYOffset))">
+            <g id="g_textIndicators" transform="translate(50, @(50+Options.LabelYOffset))">
                 @{
                     var angleoffset = (_rotate*-1) + _charRotation;
                     var textoffset = (Options.FaceRadius-10+Options.AdditionalLabelRadius)*-1;
@@ -217,8 +217,8 @@
     }
     <!-- Text -->
     <g transform="translate(50, 50)">
-        <text x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="@Options.MakersLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.MakersLabelFont">@Options.MakersLabel</text>
-        <text x="@Options.KeyLabelX" y="@Options.KeyLabelY" font-size="@Options.KeyLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.KeyLabelFont">@Options.KeyLabel</text>
+        <text id="t_makers" x="@Options.MakersLabelX" y="@Options.MakersLabelY" font-size="@Options.MakersLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.MakersLabelFont">@Options.MakersLabel</text>
+        <text id="t_key" x="@Options.KeyLabelX" y="@Options.KeyLabelY" font-size="@Options.KeyLabelFontSize" text-anchor="middle" fill="@Options.FaceColour" style="cursor:default;" font-family="@Options.KeyLabelFont">@Options.KeyLabel</text>
     </g>
 
     <!-- reset pointer -->
@@ -226,39 +226,39 @@
     {
         if(Options.ScalesMode)
         {
-            <g transform="translate(50 50)">
+            <g id="g_resetButton" transform="translate(50 50)">
                 <circle cx="@(Options.ResetButtonXOffset)" cy="@(10+Options.ResetButtonYOffset)" r="3" stroke-width="2" fill="@Options.ResetButtonColour" @onclick="Reset" style="cursor:pointer;"/>
             </g>
 
             if(Options.ReverseMode)
             {
                 var x = _maxPointerAngle - _pointerAngle + (_rotate);
-                <polygon transform="rotate(@x 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" id="pointer" />
+                <polygon id="p_reset" transform="rotate(@x 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" />
             }
             else
             {
                 var x = _maxPointerAngle - _pointerAngle + _rotate;
-                <polygon transform="rotate(@x 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" id="pointer" />
+                <polygon id="p_reset" transform="rotate(@x 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" />
             }
         }
         else
         {
             <!-- reset pointer reset button -->
-            <g transform="rotate(@Options.AdditionalRotation 50 50)">
+            <g id="g_resetButton" transform="rotate(@Options.AdditionalRotation 50 50)">
                 <circle cx="50" cy="90" r="3" stroke-width="2" fill="@Options.ResetButtonColour" @onclick="Reset" style="cursor:pointer;"/>
             </g>
 
             if(Options.ReverseMode)
             {
                 var x = _maxPointerAngle - _pointerAngle + (_rotate*-1);
-                <g transform="rotate(@_rotate 50 50)">
-                    <polygon transform="rotate(@_maxPointerAngle 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" id="pointer" />
+                <g id="g_reset" transform="rotate(@_rotate 50 50)">
+                    <polygon id="p_reset" transform="rotate(@_maxPointerAngle 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" />
                 </g>
             }
             else
             {
-                <g transform="rotate(@_rotate 50 50)">
-                    <polygon transform="rotate(@_maxPointerAngle 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" id="pointer" />
+                <g id="g_reset" transform="rotate(@_rotate 50 50)">
+                    <polygon id="p_reset" transform="rotate(@_maxPointerAngle 50 50)" points="49.7,@(8 - Options.PointerLengthAdjust) 50.3,@(8 - Options.PointerLengthAdjust) 50.6,@(Options.PointerTailLengthAdjust+65) 49.4,@(Options.PointerTailLengthAdjust+65)" fill="@Options.ResetPointercolour" />
                 </g>
             }
         }
@@ -266,37 +266,37 @@
 
 
     <!-- pointer -->
-    <g transform="rotate(@_rotate 50 50)">
+    <g id="g_pointer" transform="rotate(@_rotate 50 50)">
 
         @if(Options.ScalesMode)
         {
             if(Options.AlternatePointer)
             {
-                <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.PointerColour" transform="rotate(0 50 50)" id="pointer" />
+                <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.PointerColour" transform="rotate(0 50 50)" id="p_pointer" />
             }
             else if(Options.RimPointerMode)
             {
                 var t = (Options.FaceRadius * -1) + Options.PointerLengthAdjust;
-                <polygon points="50,@(t+55) 52,@(t+47) 50.5,@(t+47) 50.5,@(t+45) 49.5,@(t+45) 49.5,@(t+47) 48,@(t+47)" fill="@Options.PointerColour" transform="rotate(0 50 50)" id="pointer" />
+                <polygon points="50,@(t+55) 52,@(t+47) 50.5,@(t+47) 50.5,@(t+45) 49.5,@(t+45) 49.5,@(t+47) 48,@(t+47)" fill="@Options.PointerColour" transform="rotate(0 50 50)" id="p_pointer" />
             }
             else
             {
-                <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.PointerColour" transform="rotate(0 50 50)" id="pointer" />            
+                <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.PointerColour" transform="rotate(0 50 50)" id="p_pointer" />            
             }
         }
         else
         {
             if(Options.AlternatePointer)
             {
-                <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.PointerColour" transform="rotate(@_pointerAngle 50 50)" id="pointer" />
+                <polygon points="50,@((Options.FaceRadius*-1)+60) 53,@((Options.FaceRadius*-1)+70) 47,@((Options.FaceRadius*-1)+70)" fill="@Options.PointerColour" transform="rotate(@_pointerAngle 50 50)" id="p_pointer" />
             }
             else if(Options.RimPointerMode)
             {
-                <polygon points="50,@((Options.FaceRadius*-1)+55) 52,@((Options.FaceRadius*-1)+47) 50.5,@((Options.FaceRadius*-1)+47) 50.5,@((Options.FaceRadius*-1)+45) 49.5,@((Options.FaceRadius*-1)+45) 49.5,@((Options.FaceRadius*-1)+47) 48,@((Options.FaceRadius*-1)+47)" fill="@Options.PointerColour" transform="rotate(@_pointerAngle 50 50)" id="pointer" />
+                <polygon points="50,@((Options.FaceRadius*-1)+55) 52,@((Options.FaceRadius*-1)+47) 50.5,@((Options.FaceRadius*-1)+47) 50.5,@((Options.FaceRadius*-1)+45) 49.5,@((Options.FaceRadius*-1)+45) 49.5,@((Options.FaceRadius*-1)+47) 48,@((Options.FaceRadius*-1)+47)" fill="@Options.PointerColour" transform="rotate(@_pointerAngle 50 50)" id="p_pointer" />
             }
             else
             {
-                <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.PointerColour" transform="rotate(@_pointerAngle 50 50)" id="pointer" />
+                <polygon points="49.5,@(8 - Options.PointerLengthAdjust) 50.5,@(8 - Options.PointerLengthAdjust) 51,@(Options.PointerTailLengthAdjust+65) 49,@(Options.PointerTailLengthAdjust+65)" fill="@Options.PointerColour" transform="rotate(@_pointerAngle 50 50)" id="p_pointer" />
             }
         }
     </g>
@@ -304,12 +304,12 @@
     <!--Boss-->
     @if (Options.BossMode)
     {
-        <circle cx="50" cy="50" r="3" stroke-width="2" fill="@Options.BossColour" />
-        <circle cx="50" cy="50" r="1" stroke-width="2" fill="@Options.BossCenterColour" />
+        <circle id="c_boss" cx="50" cy="50" r="3" stroke-width="2" fill="@Options.BossColour" />
+        <circle id="c_bossCenter" cx="50" cy="50" r="1" stroke-width="2" fill="@Options.BossCenterColour" />
     }
 
     <!-- Dial rim -->
-    <circle cx="50" cy="50" r="@Options.DialRadius" stroke="@Options.RimColour" stroke-width="@Options.RimWidth" fill="none" /> 
+    <circle id="c_rim" cx="50" cy="50" r="@Options.DialRadius" stroke="@Options.RimColour" stroke-width="@Options.RimWidth" fill="none" /> 
 
 </svg>
 
