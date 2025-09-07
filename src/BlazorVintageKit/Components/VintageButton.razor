@@ -1,0 +1,85 @@
+﻿<button class="vint-btn" @onmousedown="OnMouseDown">
+    @{
+        var W = Width;
+        var H = Height;
+        var Bv = Bevel;
+        var drop = IsOn ? 1 : 0;
+
+        var ixL = Bv + drop;
+        var ixR = W - Bv;
+        var iyT = Bv + drop;
+        var iyB = H - Bv;
+
+        var faceX = ixL;
+        var faceY = iyT;
+        var faceW = ixR - ixL;
+        var faceH = iyB - iyT;
+    }
+    <svg width="@W" height="@H" viewBox="0 0 @W @H" shape-rendering="crispEdges"
+         xmlns="http://www.w3.org/2000/svg">
+
+        <!-- define face gradient -->
+        <defs>
+            <linearGradient id="faceGloss" x1="0" y1="0" x2="0" y2="1">
+                <!-- brighter at top -->
+                <stop offset="0%" stop-color="grey" stop-opacity="0.15" />
+                <stop offset="40%" stop-color="@Face" stop-opacity="0" />
+                <stop offset="100%" stop-color="@Face" stop-opacity="1" />
+            </linearGradient>
+        </defs>
+
+        <!-- bevels -->
+        <polygon points="0,0 @W,0 @ixR,@iyT @ixL,@iyT" fill="@TopShade" />
+        <polygon points="0,0 @ixL,@iyT @ixL,@iyB 0,@H" fill="@LeftShade" />
+        <polygon points="@ixL,@iyB @ixR,@iyB @W,@H 0,@H" fill="@BottomShade" />
+        <polygon points="@ixR,@iyT @W,0 @W,@H @ixR,@iyB" fill="@RightShade" />
+
+        <!-- base face -->
+        <rect x="@faceX" y="@faceY" width="@faceW" height="@faceH" fill="@Face" />
+        <!-- gloss overlay -->
+        <rect x="@faceX" y="@faceY" width="@faceW" height="@faceH" fill="url(#faceGloss)" />
+
+        <!-- label moves with face -->
+        <g transform="translate(@drop,@drop)">
+            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
+                  font-family="system-ui, Segoe UI, Arial" font-size="@FontSize"
+                  fill="@LabelColor">@Label</text>
+        </g>
+    </svg>
+</button>
+
+
+
+
+@code {
+    [Parameter] public string Label { get; set; } = "button";
+    [Parameter] public bool IsOn { get; set; }
+    [Parameter] public EventCallback OnToggle { get; set; }
+    [Parameter] public int Width { get; set; } = 120;
+    [Parameter] public int Height { get; set; } = 36;
+    [Parameter] public int Bevel { get; set; } = 2;
+    [Parameter] public string Face { get; set; } = "#181818";
+
+    // individual shades for each edge
+    [Parameter] public string TopHi { get; set; } = "#383838";
+    [Parameter] public string LeftHi { get; set; } = "#2e2e2e";
+    [Parameter] public string BottomLo { get; set; } = "#0a0a0a";
+    [Parameter] public string RightLo { get; set; } = "#050505";
+
+    [Parameter] public string Accent { get; set; } = "lime";
+    [Parameter] public int FontSize { get; set; } = 16;
+
+    string TopShade => IsOn ? BottomLo : TopHi;
+    string LeftShade => IsOn ? RightLo : LeftHi;
+    string BottomShade => IsOn ? TopHi : BottomLo;
+    string RightShade => IsOn ? LeftHi : RightLo;
+
+    string LabelColor => IsOn ? Accent : "#8b8b8b";
+
+    async Task OnMouseDown()
+    {
+        IsOn = !IsOn;
+        if (OnToggle.HasDelegate) await OnToggle.InvokeAsync();
+        StateHasChanged();
+    }
+}

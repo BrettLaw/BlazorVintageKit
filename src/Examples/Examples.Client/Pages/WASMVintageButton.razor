@@ -1,0 +1,14 @@
+﻿@page "/wasmvintagebutton"
+@using BlazorVintageKit
+@using static BlazorVintageKit.Components.Dial
+@rendermode InteractiveWebAssembly
+
+<h3>WASM Vintage Button</h3>
+
+<div style="display:flex;flex-direction:row">
+    <div style="width:500px;">
+        <BlazorVintageKit.Components.VintageButton Label="party"  IsOn="false" />
+        <BlazorVintageKit.Components.VintageButton Label="rock/punk" IsOn="true" Accent="lime" />
+    </div>
+</div>
+
