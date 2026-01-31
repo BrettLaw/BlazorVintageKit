@@ -4,11 +4,32 @@
 @rendermode InteractiveWebAssembly
 
 <h3>WASM Vintage Button</h3>
+<link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400..900&display=swap" rel="stylesheet">
 
 <div style="display:flex;flex-direction:row">
     <div style="width:500px;">
-        <BlazorVintageKit.Components.VintageButton Label="party"  IsOn="false" />
-        <BlazorVintageKit.Components.VintageButton Label="rock/punk" IsOn="true" Accent="lime" />
+        <BlazorVintageKit.Components.VintageButton Label="party" IsOn="false" />
+        <BlazorVintageKit.Components.VintageButton Label="gloss" IsOn="false" Options = "@(metal)"/>
+        <BlazorVintageKit.Components.VintageButton 
+            Label="rock/punk" 
+            IsOn="true" 
+            Options="@( orange with { Width = 200, FontFamily = "orbitron, monospace" } )"/>
+
+        <BlazorVintageKit.Components.VintageButton 
+            Label="rock/punk" 
+            IsOn="true" 
+            Options="@( red with { Width = 200, FontFamily = "orbitron, monospace", LabelGlow=true, FontSize=22 } )"/>
+    </div>
+</div>
+<div style="margin-top:10px;"></div>
+<div style="display:flex;flex-direction:row">
+    <div style="width:500px;">
+        <BlazorVintageKit.Components.VintageButton Label="Momentary" Momentary="true" />
     </div>
 </div>
 
+@code{
+    VintageButtonOptions orange = VintageButtonOptions.DarkStereo() with { Accent = "orange" };
+    VintageButtonOptions red = VintageButtonOptions.DarkStereo() with { Accent = "red" };
+    VintageButtonOptions metal = VintageButtonOptions.Metallic() with { Accent = "blue" };
+}

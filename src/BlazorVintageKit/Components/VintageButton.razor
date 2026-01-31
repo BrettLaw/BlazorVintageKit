@@ -1,31 +1,44 @@
-﻿<button class="vint-btn" @onmousedown="OnMouseDown">
+﻿@* VintageButton.razor *@
+<button class="vint-btn" @onmousedown="OnMouseDown" @onmouseup="OnMouseUp" @onmouseout="OnMouseUp">
     @{
-        var W = Width;
-        var H = Height;
-        var Bv = Bevel;
-        var drop = IsOn ? 1 : 0;
+        var o = Options ?? new VintageButtonOptions();
+        var W = o.Width; var H = o.Height; var B = o.Bevel;
+        var drop = IsOn ? o.DropPx : 0;
 
-        var ixL = Bv + drop;
-        var ixR = W - Bv;
-        var iyT = Bv + drop;
-        var iyB = H - Bv;
+        var ixL = B + drop; var ixR = W - B;
+        var iyT = B + drop; var iyB = H - B;
 
-        var faceX = ixL;
-        var faceY = iyT;
-        var faceW = ixR - ixL;
-        var faceH = iyB - iyT;
+        var faceX = ixL; var faceY = iyT;
+        var faceW = ixR - ixL; var faceH = iyB - iyT;
+
+        string TopShade = IsOn ? o.BottomLo : o.TopHi;
+        string LeftShade = IsOn ? o.RightLo : o.LeftHi;
+        string BottomShade = IsOn ? o.TopHi : o.BottomLo;
+        string RightShade = IsOn ? o.LeftHi : o.RightLo;
+        string LabelColor = IsOn ? o.Accent : "#8b8b8b";
+
+        var glossId = $"faceGloss_{GetHashCode()}";
+        var glowId = $"labelGlow_{GetHashCode()}";
     }
     <svg width="@W" height="@H" viewBox="0 0 @W @H" shape-rendering="crispEdges"
          xmlns="http://www.w3.org/2000/svg">
-
-        <!-- define face gradient -->
         <defs>
-            <linearGradient id="faceGloss" x1="0" y1="0" x2="0" y2="1">
-                <!-- brighter at top -->
-                <stop offset="0%" stop-color="grey" stop-opacity="0.15" />
-                <stop offset="40%" stop-color="@Face" stop-opacity="0" />
-                <stop offset="100%" stop-color="@Face" stop-opacity="1" />
+            <linearGradient id="@glossId" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="white" stop-opacity="@o.GlossStrength" />
+                <stop offset="40%" stop-color="@o.Face" stop-opacity="0" />
+                <stop offset="100%" stop-color="@o.Face" stop-opacity="1" />
             </linearGradient>
+
+            @if (o.LabelGlow)
+            {
+                <filter id="@glowId" x="-50%" y="-50%" width="200%" height="200%">
+                    <feGaussianBlur in="SourceGraphic" stdDeviation="@o.LabelGlowBlur" result="blur" />
+                    <feMerge>
+                        <feMergeNode in="blur" />
+                        <feMergeNode in="SourceGraphic" />
+                    </feMerge>
+                </filter>
+            }
         </defs>
 
         <!-- bevels -->
@@ -34,52 +47,44 @@
         <polygon points="@ixL,@iyB @ixR,@iyB @W,@H 0,@H" fill="@BottomShade" />
         <polygon points="@ixR,@iyT @W,0 @W,@H @ixR,@iyB" fill="@RightShade" />
 
-        <!-- base face -->
-        <rect x="@faceX" y="@faceY" width="@faceW" height="@faceH" fill="@Face" />
-        <!-- gloss overlay -->
-        <rect x="@faceX" y="@faceY" width="@faceW" height="@faceH" fill="url(#faceGloss)" />
+        <!-- face + gloss -->
+        <rect x="@faceX" y="@faceY" width="@faceW" height="@faceH" fill="@o.Face" />
+        <rect x="@faceX" y="@faceY" width="@faceW" height="@faceH" fill="url(#@glossId)" />
 
-        <!-- label moves with face -->
+        <!-- label -->
         <g transform="translate(@drop,@drop)">
             <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle"
-                  font-family="system-ui, Segoe UI, Arial" font-size="@FontSize"
-                  fill="@LabelColor">@Label</text>
+                  font-family="@o.FontFamily" font-size="@o.FontSize"
+                  fill="@LabelColor"
+                  filter="@(IsOn && o.LabelGlow ? $"url(#{glowId})" : null)">
+                @Label
+            </text>
         </g>
     </svg>
+
 </button>
 
-
-
-
 @code {
-    [Parameter] public string Label { get; set; } = "button";
+    [Parameter] public string Label { get; set; } = "Button";
     [Parameter] public bool IsOn { get; set; }
+    [Parameter] public bool Momentary { get; set; }
     [Parameter] public EventCallback OnToggle { get; set; }
-    [Parameter] public int Width { get; set; } = 120;
-    [Parameter] public int Height { get; set; } = 36;
-    [Parameter] public int Bevel { get; set; } = 2;
-    [Parameter] public string Face { get; set; } = "#181818";
 
-    // individual shades for each edge
-    [Parameter] public string TopHi { get; set; } = "#383838";
-    [Parameter] public string LeftHi { get; set; } = "#2e2e2e";
-    [Parameter] public string BottomLo { get; set; } = "#0a0a0a";
-    [Parameter] public string RightLo { get; set; } = "#050505";
+    [Parameter] public VintageButtonOptions? Options { get; set; }
 
-    [Parameter] public string Accent { get; set; } = "lime";
-    [Parameter] public int FontSize { get; set; } = 16;
-
-    string TopShade => IsOn ? BottomLo : TopHi;
-    string LeftShade => IsOn ? RightLo : LeftHi;
-    string BottomShade => IsOn ? TopHi : BottomLo;
-    string RightShade => IsOn ? LeftHi : RightLo;
-
-    string LabelColor => IsOn ? Accent : "#8b8b8b";
-
-    async Task OnMouseDown()
+    private async Task OnMouseDown()
     {
         IsOn = !IsOn;
         if (OnToggle.HasDelegate) await OnToggle.InvokeAsync();
         StateHasChanged();
+    }
+
+    private async Task OnMouseUp()
+    {
+        if (Momentary)
+        {
+            IsOn = false;
+            StateHasChanged();
+        }
     }
 }
